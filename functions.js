@@ -207,47 +207,33 @@ function open_post_as_dialog( postId ) {
 		url: redmond_terms.ajaxurl,
 		data: {
 			action: 'getpost',
-			post: postId
+			post: postId,
+			nonce: redmond_terms.nonce,
 		},
 		async: true,
 		beforeSend: function() {},
 		cache: false,
 		crossDomain: false,
-		error: function() {
-			do_redmond_error_window( redmond_terms.ajaxerror );
-			console.log('AJAX Error');
+		dataType: 'json',
+		error: function( jqXHR ) {
+			redmondHandleAjaxError( jqXHR );
 		},
 		method: 'POST',
 		success: function( returned ) {
-			var res = wpAjax.parseAjaxResponse( returned );
-			switch(true) {
-				case ( res === false ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No such AJAX Action');
-					break;
-
-				case ( typeof( res.responses ) == 'undefined' ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No Parsable Response');
-					break;
-
-				case ( res.responses.length > 0 ):
-					var data = jQuery.parseJSON( res.responses[0].data );
-					redmond_window( data.task_name , data.post_title , data.post_content , data.fileMenu , true, true , data.post_icon );
-					processes[data.task_name].find('article').css({
-						padding: 10,
-					});
-					sounds.open.play();
-					break;
-
-				default:
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('Unknown Error');
-					break;
+			var data = redmondParseAjaxResponse( returned );
+			if ( false === data ) {
+				redmondHandleAjaxError();
+				return;
 			}
+			redmond_window( data.task_name , data.post_title , data.post_content , data.fileMenu , true, true , data.post_icon );
+			processes[data.task_name].find('article').css({
+				padding: 10,
+			});
+			sounds.open.play();
 		}
 	});
 }
+
 
 function open_archive_as_dialog( archive , taxonomy , targetId ) {
 	if( typeof( taxonomy ) == 'undefined' ) {
@@ -262,57 +248,42 @@ function open_archive_as_dialog( archive , taxonomy , targetId ) {
 			action: 'getarchive',
 			taxonomy: taxonomy,
 			archive: archive,
+			nonce: redmond_terms.nonce,
 		},
 		async: true,
 		beforeSend: function() {},
 		cache: false,
 		crossDomain: false,
-		error: function() {
-			do_redmond_error_window( redmond_terms.ajaxerror );
-			console.log('AJAX Error');
+		dataType: 'json',
+		error: function( jqXHR ) {
+			redmondHandleAjaxError( jqXHR );
 		},
 		method: 'POST',
 		success: function( returned ) {
-			var res = wpAjax.parseAjaxResponse( returned );
-			switch(true) {
-				case ( res === false ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No such AJAX Action');
-					break;
-
-				case ( typeof( res.responses ) == 'undefined' ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No Parsable Response');
-					break;
-
-				case ( res.responses.length > 0 ):
-					var data = jQuery.parseJSON( res.responses[0].data );
-					if( typeof( targetId ) !== 'undefined' && jQuery("#" + targetId ).length > 0 ) {
-						jQuery("#"+targetId).dialog('close');
-					}
-					redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
-					jQuery("#" + data.taskname).find('a').on('click',function(e) {
-						if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
-							e.preventDefault();
-							switch( jQuery(this).attr('data-type') ) {
-								case 'regular':
-									open_this_as_redmond_dialog(this);
-									break;
-
-								default:
-									open_category_as_redmond_dialog(this);
-									break;
-							}
-						}
-					});
-					sounds.open.play();
-					break;
-
-				default:
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('Unknown Error');
-					break;
+			var data = redmondParseAjaxResponse( returned );
+			if ( false === data ) {
+				redmondHandleAjaxError();
+				return;
 			}
+			if( typeof( targetId ) !== 'undefined' && jQuery("#" + targetId ).length > 0 ) {
+				jQuery("#"+targetId).dialog('close');
+			}
+			redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
+			jQuery("#" + data.taskname).find('a').on('click',function(e) {
+				if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
+					e.preventDefault();
+					switch( jQuery(this).attr('data-type') ) {
+					case 'regular':
+						open_this_as_redmond_dialog(this);
+						break;
+
+					default:
+						open_category_as_redmond_dialog(this);
+						break;
+					}
+				}
+			});
+			sounds.open.play();
 		}
 	});
 }
@@ -326,57 +297,42 @@ function open_redmond_authors_window( author ) {
 		data: {
 			action: 'getauthor',
 			author: author,
+			nonce: redmond_terms.nonce,
 		},
 		async: true,
 		beforeSend: function() {},
 		cache: false,
 		crossDomain: false,
-		error: function() {
-			do_redmond_error_window( redmond_terms.ajaxerror );
-			console.log('AJAX Error');
+		dataType: 'json',
+		error: function( jqXHR ) {
+			redmondHandleAjaxError( jqXHR );
 		},
 		method: 'POST',
 		success: function( returned ) {
-			var res = wpAjax.parseAjaxResponse( returned );
-			switch(true) {
-				case ( res === false ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No such AJAX Action');
-					break;
-
-				case ( typeof( res.responses ) == 'undefined' ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No Parsable Response');
-					break;
-
-				case ( res.responses.length > 0 ):
-					var data = jQuery.parseJSON( res.responses[0].data );
-					if( typeof( targetId ) !== 'undefined' && jQuery("#" + targetId ).length > 0 ) {
-						jQuery("#"+targetId).dialog('close');
-					}
-					redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
-					jQuery("#" + data.taskname).find('a').on('click',function(e) {
-						if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
-							e.preventDefault();
-							switch( jQuery(this).attr('data-type') ) {
-								case 'regular':
-									open_this_as_redmond_dialog(this);
-									break;
-
-								default:
-									open_redmond_authors_window( jQuery(this).attr('data-author-id') );
-									break;
-							}
-						}
-					});
-					sounds.open.play();
-					break;
-
-				default:
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('Unknown Error');
-					break;
+			var data = redmondParseAjaxResponse( returned );
+			if ( false === data ) {
+				redmondHandleAjaxError();
+				return;
 			}
+			if( typeof( targetId ) !== 'undefined' && jQuery("#" + targetId ).length > 0 ) {
+				jQuery("#"+targetId).dialog('close');
+			}
+			redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
+			jQuery("#" + data.taskname).find('a').on('click',function(e) {
+				if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
+					e.preventDefault();
+					switch( jQuery(this).attr('data-type') ) {
+					case 'regular':
+						open_this_as_redmond_dialog(this);
+						break;
+
+					default:
+						open_redmond_authors_window( jQuery(this).attr('data-author-id') );
+						break;
+					}
+				}
+			});
+			sounds.open.play();
 		}
 	});
 }
@@ -393,65 +349,73 @@ function open_redmond_search_window( search ) {
 		data: {
 			action: 'getsearch',
 			search:search,
+			nonce: redmond_terms.nonce,
 		},
 		async: true,
 		beforeSend: function() {},
 		cache: false,
 		crossDomain: false,
-		error: function() {
-			do_redmond_error_window( redmond_terms.ajaxerror );
-			console.log('AJAX Error');
+		dataType: 'json',
+		error: function( jqXHR ) {
+			redmondHandleAjaxError( jqXHR );
 		},
 		method: 'POST',
 		success: function( returned ) {
-			var res = wpAjax.parseAjaxResponse( returned );
-			switch(true) {
-				case ( res === false ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No such AJAX Action');
-					break;
-
-				case ( typeof( res.responses ) == 'undefined' ):
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('No Parsable Response');
-					break;
-
-				case ( res.responses.length > 0 ):
-					var data = jQuery.parseJSON( res.responses[0].data );
-					redmond_window( 'searchwindow' , windowTitle , data.html , redmond_terms.default_file_menu , false , true , redmond_terms.searchIcon );
-					jQuery("#searchwindow").find('button').on('click',function(e) {
-						e.preventDefault();
-						open_redmond_search_window( jQuery('#searchwindow').find('input').val() );
-					});
-					jQuery("#searchwindow").find('input').on('keyup',function(e){
-						if( e.keyCode == 13 ) {
-							open_redmond_search_window( jQuery('#searchwindow').find('input').val() );	
-						}
-					});
-					jQuery("#searchwindow").find('a').on('click',function(e) {
-						if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
-							e.preventDefault();
-							switch( jQuery(this).attr('data-type') ) {
-								case 'regular':
-									open_this_as_redmond_dialog(this);
-									break;
-
-								default:
-									open_category_as_redmond_dialog(this);
-									break;
-							}
-						}
-					});
-					sounds.open.play();
-					break;
-
-				default:
-					do_redmond_error_window( redmond_terms.ajaxerror );
-					console.log('Unknown Error');
-					break;
+			var data = redmondParseAjaxResponse( returned );
+			if ( false === data ) {
+				redmondHandleAjaxError();
+				return;
 			}
+			redmond_window( 'searchwindow' , windowTitle , data.html , redmond_terms.default_file_menu , false , true , redmond_terms.searchIcon );
+			jQuery("#searchwindow").find('button').on('click',function(e) {
+				e.preventDefault();
+				open_redmond_search_window( jQuery('#searchwindow').find('input').val() );
+			});
+			jQuery("#searchwindow").find('input').on('keyup',function(e){
+				if( e.keyCode == 13 ) {
+					open_redmond_search_window( jQuery('#searchwindow').find('input').val() );
+				}
+			});
+			jQuery("#searchwindow").find('a').on('click',function(e) {
+				if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
+					e.preventDefault();
+					switch( jQuery(this).attr('data-type') ) {
+					case 'regular':
+						open_this_as_redmond_dialog(this);
+						break;
+
+					default:
+						open_category_as_redmond_dialog(this);
+						break;
+					}
+				}
+			});
+			sounds.open.play();
 		}
 	});
+}
+
+function redmondHandleAjaxError( jqXHR ) {
+	var message = redmond_terms.ajaxerror;
+	if ( jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.data ) {
+		if ( typeof jqXHR.responseJSON.data === 'string' && jqXHR.responseJSON.data.length > 0 ) {
+			message = jqXHR.responseJSON.data;
+		} else if ( jqXHR.responseJSON.data.message ) {
+			message = jqXHR.responseJSON.data.message;
+		}
+	}
+	do_redmond_error_window( message );
+	console.log( 'AJAX Error', jqXHR );
+}
+
+function redmondParseAjaxResponse( returned ) {
+	if ( ! returned || typeof returned.success === 'undefined' ) {
+		return false;
+	}
+	if ( true !== returned.success || typeof returned.data === 'undefined' ) {
+		return false;
+	}
+	return returned.data;
 }
 
 function do_redmond_error_window( message ) {

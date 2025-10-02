@@ -1,87 +1,87 @@
 <?php
 	defined( 'ABSPATH' ) || die( 'Sorry, but you cannot access this page directly.' );
 
-	$redmond_scripts = array(
-		array(
-			'handle' => 'bootstrap',
-			'src' => '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js',
-			'deps' => array('jquery'),
-			'ver' => null,
-			'in_footer' => true,
-		),
-		array(
-			'handle' => 'validate',
-			'src' => '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.min.js',
-			'deps' => array('jquery'),
-			'ver' => null,
-			'in_footer' => true,
-		),
-		array(
-			'handle' => 'validate-additional',
-			'src' => '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/additional-methods.min.js',
-			'deps' => array('jquery'),
-			'ver' => null,
-			'in_footer' => true,
-		),
-		array(
-			'handle' => 'chosen',
-			'src' => '//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js',
-			'deps' => array('jquery'),
-			'ver' => null,
-			'in_footer' => true,
-		),
-		array(
-			'handle' => 'redmond-dialogs',
-			'src' => REDMONDURI . '/resources/redmond-dialogs.js',
-			'deps' => array(
-				'jquery',
-				'jquery-ui-dialog',
-				'jquery-ui-core',
-			),
-			'ver' => '0.0.1',
-			'in_footer' => true,
-			'needsTranslation' => true,
-		),
-		array(
-			'handle' => 'redmond',
-			'src' => REDMONDURI . '/functions.js',
-			'deps' => array(
-				'jquery',
-				'redmond-dialogs',
-				'chosen',
-				'bootstrap',
-				'wp-ajax-response',
-				'validate',
-				'validate-additional',
-			),
-			'ver' => '0.0.1',
-			'in_footer' => true,
-			'needsTranslation' => true,
-		),
-	);
-	$redmond_styles = array(
-		array(
-			'handle' => 'chosen',
-			'src' => '//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.1/chosen.min.css',
-			'deps' => array(),
-			'ver' => null,
-			'media' => 'all',
-		),
-		array(
-			'handle' => 'bootstrap',
-			'src' => '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css',
-			'deps' => array(),
-			'ver' => null,
-			'media' => 'all',
-		),
-		array(
-			'handle' => 'redmond',
-			'src' => REDMONDURI . '/style.css',
-			'deps' => array('chosen', 'bootstrap'),
-			'ver' => '0.0.1',
-			'media' => 'all',
-		),
-	);
+        $redmond_scripts = array(
+                array(
+                        'handle' => 'bootstrap',
+                        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js',
+                        'deps' => array( 'jquery' ),
+                        'ver' => '3.4.1',
+                        'in_footer' => true,
+                ),
+                array(
+                        'handle' => 'validate',
+                        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js',
+                        'deps' => array( 'jquery' ),
+                        'ver' => '1.19.5',
+                        'in_footer' => true,
+                ),
+                array(
+                        'handle' => 'validate-additional',
+                        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js',
+                        'deps' => array( 'jquery', 'validate' ),
+                        'ver' => '1.19.5',
+                        'in_footer' => true,
+                ),
+                array(
+                        'handle' => 'chosen',
+                        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js',
+                        'deps' => array( 'jquery' ),
+                        'ver' => '1.8.7',
+                        'in_footer' => true,
+                ),
+                array(
+                        'handle' => 'redmond-dialogs',
+                        'src' => REDMONDURI . '/resources/redmond-dialogs.js',
+                        'deps' => array(
+                                'jquery',
+                                'jquery-ui-dialog',
+                                'jquery-ui-core',
+                        ),
+                        'ver' => REDMOND_THEME_VERSION,
+                        'in_footer' => true,
+                        'needsTranslation' => true,
+                ),
+                array(
+                        'handle' => 'redmond',
+                        'src' => REDMONDURI . '/functions.js',
+                        'deps' => array(
+                                'jquery',
+                                'redmond-dialogs',
+                                'chosen',
+                                'bootstrap',
+                                'wp-ajax-response',
+                                'validate',
+                                'validate-additional',
+                        ),
+                        'ver' => REDMOND_THEME_VERSION,
+                        'in_footer' => true,
+                        'needsTranslation' => true,
+                ),
+        );
+        $redmond_styles = array(
+                array(
+                        'handle' => 'chosen',
+                        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css',
+                        'deps' => array(),
+                        'ver' => '1.8.7',
+                        'media' => 'all',
+                ),
+                array(
+                        'handle' => 'bootstrap',
+                        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css',
+                        'deps' => array(),
+                        'ver' => '3.4.1',
+                        'media' => 'all',
+                ),
+                array(
+                        'handle' => 'redmond',
+                        'src' => REDMONDURI . '/style.css',
+                        'deps' => array( 'chosen', 'bootstrap' ),
+                        'ver' => REDMOND_THEME_VERSION,
+                        'media' => 'all',
+                ),
+        );
 	$redmond_js_translations = array(
 		'ajaxurl' => admin_url( 'admin-ajax.php' ),
 		'searchIcon' => get_theme_mod( 'redmond_default_search_icon' , REDMONDURI . '/resources/sitesearch.ico' ),
@@ -90,10 +90,11 @@
 		'externalPageIcon' => get_theme_mod( 'redmond_external_page_icon' , REDMONDURI . '/resources/external.ico' ),
 		'errorSound' => get_theme_mod( 'redmond_default_error_sound' , REDMONDURI . '/resources/error.wav' ),
 		'openSound' => get_theme_mod( 'redmond_default_open_sound' , REDMONDURI . '/resources/open.wav' ),
-		'loginSound' => get_theme_mod( 'redmond_default_startup_sound' , REDMONDURI . '/resources/logon.wav' ),
-		'playLoginSounds' => ( isset( $_COOKIE['returning_visit'] ) ) ? false : true,
-		'file' => __( 'File', RTEXTDOMAIN ),
-		'close' => __( 'Exit', RTEXTDOMAIN ),
+                'loginSound' => get_theme_mod( 'redmond_default_startup_sound' , REDMONDURI . '/resources/logon.wav' ),
+                'playLoginSounds' => ( isset( $_COOKIE['returning_visit'] ) ) ? false : true,
+                'nonce' => wp_create_nonce( 'redmond_ajax_nonce' ),
+                'file' => __( 'File', RTEXTDOMAIN ),
+                'close' => __( 'Exit', RTEXTDOMAIN ),
 		'closetext' => __( 'Close', RTEXTDOMAIN ),
 		'errTitle' => __( 'Error', RTEXTDOMAIN ),
 		'ajaxerror' => __( 'An error has occured while attempting to retrieve the requested information. Please check the error console for more information.', RTEXTDOMAIN ),
@@ -109,60 +110,61 @@
 
 	function redmond_theme_add_scripts_and_styles() {
 		global $redmond_scripts, $redmond_styles, $redmond_js_translations;
-		foreach ( $redmond_scripts as $script ) {
-			wp_deregister_script( $script['handle'] );
-			wp_register_script( $script['handle'], $script['src'], $script['deps'], $script['ver'], $script['in_footer'] );
-			if ( array_key_exists( 'needsTranslation', $script ) && true == $script['needsTranslation'] ) {
-				wp_localize_script( $script['handle'] , 'redmond_terms' , $redmond_js_translations );
-			}
-			wp_enqueue_script( $script['handle'] );
-		}
-		foreach ( $redmond_styles as $style ) {
-			wp_deregister_style( $style['handle'] );
-			wp_register_style( $style['handle'], $style['src'], $style['deps'], ( array_key_exists( 'ver', $style ) ) ? $style['ver'] : null, $style['media'] );
-			wp_enqueue_style( $style['handle'] );
-		}
+                foreach ( $redmond_scripts as $script ) {
+                        wp_register_script( $script['handle'], $script['src'], $script['deps'], $script['ver'], $script['in_footer'] );
+                        if ( array_key_exists( 'needsTranslation', $script ) && true === $script['needsTranslation'] ) {
+                                wp_localize_script( $script['handle'], 'redmond_terms', $redmond_js_translations );
+                        }
+                        wp_enqueue_script( $script['handle'] );
+                }
+                foreach ( $redmond_styles as $style ) {
+                        wp_register_style( $style['handle'], $style['src'], $style['deps'], ( array_key_exists( 'ver', $style ) ) ? $style['ver'] : null, $style['media'] );
+                        wp_enqueue_style( $style['handle'] );
+                }
 	}
 
-	function redmond_add_menus() {
-		$menus = array(
-			'quick_launch' => __( 'Quick Launch Menu', RTEXTDOMAIN ),
-			'desktop' => __( 'Desktop Menu', RTEXTDOMAIN ),
-			'start' => __( 'Start Menu', RTEXTDOMAIN ),
-		);
-		register_nav_menus( $menus );
-	}
+        function redmond_add_menus() {
+                $menus = array(
+                        'quick_launch' => __( 'Quick Launch Menu', RTEXTDOMAIN ),
+                        'desktop' => __( 'Desktop Menu', RTEXTDOMAIN ),
+                        'start' => __( 'Start Menu', RTEXTDOMAIN ),
+                );
+                register_nav_menus( $menus );
+        }
 
-	function redmond_add_theme_supports() {
-		$redmond_background_defaults = array(
-			'default-color' => '3a6ea5',
-			'wp-head-callback' => 'redmond_custom_background_printer',
-		);
-		add_theme_support( 'post-thumbnails' );
-		add_theme_support( 'custom-background' ,$redmond_background_defaults );
-	}
+        function redmond_add_theme_supports() {
+                $redmond_background_defaults = array(
+                        'default-color' => '3a6ea5',
+                        'wp-head-callback' => 'redmond_custom_background_printer',
+                );
+
+                load_theme_textdomain( RTEXTDOMAIN, get_template_directory() . '/languages' );
+
+                add_theme_support( 'post-thumbnails' );
+                add_theme_support( 'custom-background', $redmond_background_defaults );
+                add_theme_support( 'custom-logo', array(
+                        'height' => 64,
+                        'width' => 64,
+                        'flex-height' => true,
+                        'flex-width' => true,
+                ) );
+                add_theme_support( 'automatic-feed-links' );
+                add_theme_support( 'title-tag' );
+                add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) );
+                add_theme_support( 'responsive-embeds' );
+                add_theme_support( 'wp-block-styles' );
+                add_theme_support( 'editor-styles' );
+                add_editor_style( 'resources/editor-style.css' );
+                add_theme_support( 'customize-selective-refresh-widgets' );
+        }
 
 	function redmond_user_gravatar( $email, $size = 64 ) {
 		return '//www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?d=mm&s=' . intval( $size ) . '&r=g';
 	}
 
-	function redmond_filter_wp_title( $title, $sep ) {
-		global $wp_query;
-		switch ( true ) {
-			case is_front_page():
-				$title = get_bloginfo( 'description' );
-				break;
-
-			default:
-				$title = str_replace( ' - ' . get_bloginfo( 'name' ), '', $title );
-				break;
-		}
-		return $title;
-	}
-
-	function redmond_remove_admin_bar() {
-		show_admin_bar( false );
-	}
+        function redmond_remove_admin_bar() {
+                show_admin_bar( false );
+        }
 
 	function redmond_custom_background_printer() {
 		$color = get_theme_mod( 'background_color', get_theme_support( 'custom-background', 'default-color' ) );
