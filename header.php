@@ -1,20 +1,16 @@
 <?php
-	defined( 'ABSPATH' ) || die( 'Sorry, but you cannot access this page directly.' );
-	global $current_user, $wpdb;
-	$quick_launch = redmond_get_menu_as_array( 'quick_launch' );
-	get_currentuserinfo();
+defined( 'ABSPATH' ) || die( 'Sorry, but you cannot access this page directly.' );
+global $wpdb;
+$quick_launch  = redmond_get_menu_as_array( 'quick_launch' );
+$current_user = wp_get_current_user();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 	<head>
 		<meta charset="<?php bloginfo( 'charset' ); ?>">
-		<meta name="viewport" content="width=device-width">
-		<title><?php wp_title( '', true, 'right' ); ?> | <?php print esc_html( get_bloginfo( 'name' ) ); ?></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="profile" href="http://gmpg.org/xfn/11">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta name="format-detection" content="telephone=no">
@@ -23,6 +19,11 @@
 		?>
 	</head>
 	<body <?php body_class( 'custom-background' ); ?>>
+		<?php
+		if ( function_exists( 'wp_body_open' ) ) {
+			wp_body_open();
+		}
+		?>
 		<div id="taskbar-outer">
 			<div id="taskbar-inner">
 				<span class="button-outer">
