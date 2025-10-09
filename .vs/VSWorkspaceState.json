@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\bin",
+    "\\parts"
   ],
-  "SelectedNode": "\\C:\\Users\\felix\\Source\\Repos\\WP_XP-style",
+  "SelectedNode": "\\UPGRADE_PLAN.md",
   "PreviewInSolutionExplorer": false
 }

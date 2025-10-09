@@ -33,10 +33,10 @@
 		else {
 			$postType = $wpdb->get_var( $wpdb->prepare( 'SELECT post_type FROM ' . $wpdb->prefix . 'posts WHERE ID = %d', $post_id ) );
 			if ( 'nav_menu_item' == $postType ) {
-				return get_theme_mod( 'redmond_external_page_icon' , REDMONDURI . '/resources/external.ico' );
+				return get_theme_mod( 'redmond_external_page_icon' , REDMONDURI . '/resources/external.png' );
 			}
 			else {
-				return get_theme_mod( 'redmond_default_post_icon' , REDMONDURI . '/resources/post.ico' );
+				return get_theme_mod( 'redmond_default_post_icon' , REDMONDURI . '/resources/post.png' );
 			}
 		}
 	}
@@ -47,91 +47,91 @@
 				'rel' => 'icon',
 				'sizes' => '16x16',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'shortcut icon',
 				'sizes' => '16x16',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'icon',
 				'sizes' => '32x32',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'icon',
 				'sizes' => '64x64',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'icon',
 				'sizes' => '96x96',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'icon',
 				'sizes' => '160x160',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'icon',
 				'sizes' => '196x196',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '57x57',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '114x114',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '72x72',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '144x144',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '60x60',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '120x120',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '76x76',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 			array(
 				'rel' => 'apple-touch-icon',
 				'sizes' => '152x152',
 				'type' => 'image/png',
-				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.ico' ),
+				'href' => get_theme_mod( 'redmond_favicon' , REDMONDURI . '/resources/fav.png' ),
 			),
 		);
 		$html = '';
