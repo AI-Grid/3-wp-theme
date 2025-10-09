@@ -28,7 +28,7 @@ $current_user = wp_get_current_user();
 			<div id="taskbar-inner">
 				<span class="button-outer">
 					<button class="system-button" id="start-button">
-						<img src="<?php print esc_url( get_theme_mod( 'redmond_start_icon' , REDMONDURI . '/resources/search.ico' ) ); ?>" />
+						<img src="<?php print esc_url( get_theme_mod( 'redmond_start_icon' , REDMONDURI . '/resources/search.png' ) ); ?>" />
 						<span class="button-text"><?php esc_html_e( 'Start', RTEXTDOMAIN ); ?></span>
 					</button>
 				</span>
@@ -88,16 +88,16 @@ $current_user = wp_get_current_user();
 						<div class="col-xs-6">
 							<div id="start-menu-content-links">
 								<a id="my-documents-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.png' ) ); ?>" />
 									<?php esc_html_e( 'Categories', RTEXTDOMAIN ); ?>
 								</a>
 								<?php if ( count( get_tags() ) > 0 ) { ?>
 								<a id="my-tags-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.png' ) ); ?>" />
 									<?php esc_html_e( 'Tags', RTEXTDOMAIN ); ?>
 								</a>
 								<a id="authors-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.png' ) ); ?>" />
 									<?php esc_html_e( 'Authors', RTEXTDOMAIN ); ?>
 								</a>
 								<?php
@@ -106,11 +106,11 @@ if ( current_user_can( 'publish_posts' ) ) {
 								?>
 								<a class="seperator"></a>
 								<a href="<?php print esc_url( admin_url( 'customize.php?return=%2F' ) ); ?>" id="system-info-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_info_icon' , REDMONDURI . '/resources/sysinfo.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_info_icon' , REDMONDURI . '/resources/sysinfo.png' ) ); ?>" />
 									<?php esc_html_e( 'Site Customization', RTEXTDOMAIN ); ?>
 								</a>
 								<a href="<?php print esc_url( admin_url() ); ?>" id="control-panel-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_control_panel_icon' , REDMONDURI . '/resources/register.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_control_panel_icon' , REDMONDURI . '/resources/register.png' ) ); ?>" />
 									<?php esc_html_e( 'Control Panel' ,RTEXTDOMAIN ); ?>
 								</a>
 								<?php
@@ -118,11 +118,11 @@ if ( current_user_can( 'publish_posts' ) ) {
 								?>
 								<a class="seperator"></a>
 								<a href="/" title="<?php esc_html_e( 'Home', RTEXTDOMAIN );?>" alt="<?php esc_html_e( 'Home', RTEXTDOMAIN );?>" id="home-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_home_icon' , REDMONDURI . '/resources/home.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_home_icon' , REDMONDURI . '/resources/home.png' ) ); ?>" />
 									<?php esc_html_e( 'Home', RTEXTDOMAIN ); ?>
 								</a>
 								<a id="system-search-start-menu-link">
-									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_search_icon' , REDMONDURI . '/resources/sitesearch.ico' ) ); ?>" />
+									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_search_icon' , REDMONDURI . '/resources/sitesearch.png' ) ); ?>" />
 									<?php esc_html_e( 'Search', RTEXTDOMAIN ); ?>
 								</a>
 							</div>
@@ -159,7 +159,7 @@ if ( current_user_can( 'publish_posts' ) ) {
 								?>
 								<li>
 									<a href="<?php print esc_url( admin_url( 'post-new.php' ) ); ?>" id="new-post-start-menu-link">
-										<img src="<?php print esc_url( get_theme_mod( 'redmond_default_new_icon' , REDMONDURI . '/resources/new.ico' ) ); ?>" />
+										<img src="<?php print esc_url( get_theme_mod( 'redmond_default_new_icon' , REDMONDURI . '/resources/new.png' ) ); ?>" />
 										<?php esc_html_e( 'New Post', RTEXTDOMAIN ); ?>
 									</a>
 								</li>
@@ -167,7 +167,7 @@ if ( current_user_can( 'publish_posts' ) ) {
 								<?php
 								}
 								foreach ( $archives_month as $month ) {
-									print '<li><img src="' . esc_url( get_theme_mod( 'redmond_archives_icon' , REDMONDURI . '/resources/archives.ico' ) ) . '" />' . esc_html( date_i18n( 'F Y', strtotime( $month->timestamp ) ) ) . '<span style="margin-left: 20px;" class="glyphicon glyphicon-play pull-right"></span>';
+									print '<li><img src="' . esc_url( get_theme_mod( 'redmond_archives_icon' , REDMONDURI . '/resources/archives.png' ) ) . '" />' . esc_html( date_i18n( 'F Y', strtotime( $month->timestamp ) ) ) . '<span style="margin-left: 20px;" class="glyphicon glyphicon-play pull-right"></span>';
 									$ar_query = 'SELECT
 										' . $table . '.ID,
 										' . $table . '.post_title
@@ -259,7 +259,7 @@ if ( current_user_can( 'publish_posts' ) ) {
 						if ( is_user_logged_in() ) {
 					?>
 					<a class="start-menu-bottom-bar-command logout" id="start-menu-bottom-bar-logout" href="<?php print esc_url( wp_logout_url( home_url() ) ); ?>">
-						<img src="<?php print esc_url( get_theme_mod( 'redmond_logout_icon' , REDMONDURI . '/resources/logout.ico' ) ); ?>" />
+						<img src="<?php print esc_url( get_theme_mod( 'redmond_logout_icon' , REDMONDURI . '/resources/logout.png' ) ); ?>" />
 						<?php esc_html_e( 'Log Off', RTEXTDOMAIN ); ?>
 					</a>
 					<?php
@@ -268,14 +268,14 @@ if ( current_user_can( 'publish_posts' ) ) {
 						if ( get_option( 'users_can_register' ) ) {
 					?>
 					<a class="start-menu-bottom-bar-command register" id="start-menu-bottom-bar-register" href="<?php print esc_url( wp_registration_url() ); ?>">
-						<img src="<?php print esc_url( get_theme_mod( 'redmond_register_icon' , REDMONDURI . '/resources/register.ico' ) ); ?>" />
+						<img src="<?php print esc_url( get_theme_mod( 'redmond_register_icon' , REDMONDURI . '/resources/register.png' ) ); ?>" />
 						<?php esc_html_e( 'Register', RTEXTDOMAIN ); ?>
 					</a>
 					<?php
 						}
 					?>
 					<a class="start-menu-bottom-bar-command login" id="start-menu-bottom-bar-login" href="<?php print esc_url( wp_login_url( home_url() ) ); ?>">
-						<img src="<?php print esc_url( get_theme_mod( 'redmond_logout_icon' , REDMONDURI . '/resources/logout.ico' ) ); ?>" />
+						<img src="<?php print esc_url( get_theme_mod( 'redmond_logout_icon' , REDMONDURI . '/resources/logout.png' ) ); ?>" />
 						<?php esc_html_e( 'Log In', RTEXTDOMAIN ); ?>
 					</a>
 					<?php

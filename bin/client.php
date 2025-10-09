@@ -84,10 +84,10 @@
         );
 	$redmond_js_translations = array(
 		'ajaxurl' => admin_url( 'admin-ajax.php' ),
-		'searchIcon' => get_theme_mod( 'redmond_default_search_icon' , REDMONDURI . '/resources/sitesearch.ico' ),
-		'windowIcon' => get_theme_mod( 'redmond_default_dialog_icon' , REDMONDURI . '/resources/dialog.ico' ),
-		'errorIcon' => get_theme_mod( 'redmond_default_error_icon' , REDMONDURI . '/resources/error.ico' ),
-		'externalPageIcon' => get_theme_mod( 'redmond_external_page_icon' , REDMONDURI . '/resources/external.ico' ),
+		'searchIcon' => get_theme_mod( 'redmond_default_search_icon' , REDMONDURI . '/resources/sitesearch.png' ),
+		'windowIcon' => get_theme_mod( 'redmond_default_dialog_icon' , REDMONDURI . '/resources/dialog.png' ),
+		'errorIcon' => get_theme_mod( 'redmond_default_error_icon' , REDMONDURI . '/resources/error.png' ),
+		'externalPageIcon' => get_theme_mod( 'redmond_external_page_icon' , REDMONDURI . '/resources/external.png' ),
 		'errorSound' => get_theme_mod( 'redmond_default_error_sound' , REDMONDURI . '/resources/error.wav' ),
 		'openSound' => get_theme_mod( 'redmond_default_open_sound' , REDMONDURI . '/resources/open.wav' ),
                 'loginSound' => get_theme_mod( 'redmond_default_startup_sound' , REDMONDURI . '/resources/logon.wav' ),
@@ -305,7 +305,7 @@
 					'id' => $cat->cat_ID,
 					'title' => substr( $cat->cat_name, 0,20 ),
 					'fulltitle' => $cat->cat_name,
-					'icon' => get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.ico' ),
+					'icon' => get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.png' ),
 				);
 				array_push( $tdata[ 'row_' . $count ], $link );
 				if ( $colcount < $max_cols ) {
@@ -370,7 +370,7 @@
 					'id' => $cat->term_id,
 					'title' => substr( $cat->name, 0,20 ),
 					'fulltitle' => $cat->name,
-					'icon' => get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.ico' ),
+					'icon' => get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.png' ),
 				);
 				array_push( $tdata[ 'row_' . $count ], $link );
 				if ( $colcount < $max_cols ) {
@@ -424,7 +424,7 @@
 		$html .= '				<div class="row">' . "\r\n";
 		$html .= '					<div class="col-xs-12">' . "\r\n";
 		$html .= '						<h4>' . "\r\n";
-		$html .= '							<img src="' . get_theme_mod( 'redmond_searchfolder_icon' , REDMONDURI . '/resources/search.ico' ) . '" title="' . __( 'Search for Posts',RTEXTDOMAIN ) . '" alt="' . __( 'Search for Posts',RTEXTDOMAIN ) . '" />' . "\r\n";
+		$html .= '							<img src="' . get_theme_mod( 'redmond_searchfolder_icon' , REDMONDURI . '/resources/search.png' ) . '" title="' . __( 'Search for Posts',RTEXTDOMAIN ) . '" alt="' . __( 'Search for Posts',RTEXTDOMAIN ) . '" />' . "\r\n";
 		$html .= '							' . __( 'Search for Posts',RTEXTDOMAIN ) . "\r\n";
 		$html .= '						</h4>' . "\r\n";
 		$html .= '						<hr />' . "\r\n";

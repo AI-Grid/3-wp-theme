@@ -68,7 +68,7 @@
                         'breadcrumbs'=> '',
                         'menu'       => array(),
                         'title'      => __( 'Archive', RTEXTDOMAIN ),
-                        'icon'       => get_theme_mod( 'redmond_default_documents_icon', REDMONDURI . '/resources/docs.ico' ),
+                        'icon'       => get_theme_mod( 'redmond_default_documents_icon', REDMONDURI . '/resources/docs.png' ),
                         'taskname'   => null,
                 );
 
@@ -128,7 +128,7 @@
                         'breadcrumbs'=> '',
                         'menu'       => array(),
                         'title'      => __( 'Author', RTEXTDOMAIN ),
-                        'icon'       => get_theme_mod( 'redmond_default_documents_icon', REDMONDURI . '/resources/docs.ico' ),
+                        'icon'       => get_theme_mod( 'redmond_default_documents_icon', REDMONDURI . '/resources/docs.png' ),
                         'taskname'   => null,
                 );
                 $data['menu']['close'] = array(
