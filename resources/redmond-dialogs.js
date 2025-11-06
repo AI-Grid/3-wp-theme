@@ -124,7 +124,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					return 'auto';
 				}
 			},
-			'overflow': 'hidden',
+                        'overflow': 'visible',
 		});
 		var processId = jQuery(this).attr('id');
 		if ( processId ) {
