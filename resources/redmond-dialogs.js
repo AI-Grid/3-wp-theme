@@ -46,8 +46,9 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					'background-size': 'contain',
 				});
 				processes[objid].find('button.ui-dialog-titlebar-close').on('click',function(){
-					processes[objid].dialog('destroy');
+					processes[objid].dialog('close');
 				});
+				redmond_enforce_window_bounds( objid );
 				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 				jQuery(window).trigger('checkOpenWindows');
 				processes[objid].parent().on('click',function() {
@@ -69,7 +70,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				find_window_on_top();
 			},
 			title: title,
-                        closeText: "\u00d7",
+			closeText: "\u00d7",
 			width: 'auto',
 			height: 'auto',
 		});
@@ -94,6 +95,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 			}
 		});
 		processes[objid].dialog('moveToTop');
+		redmond_enforce_window_bounds( objid );
 		find_window_on_top();
 	}
 	jQuery("div.redmond-dialog-window").each(function() {
@@ -104,16 +106,23 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					return 20;
 				}
 				else {
-					0;
-				}	
+					return 0;
+				}
 			},
 			height: function() {
 				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return ( jQuery(window).height() * 0.9 )
+					return ( jQuery(window).height() * 0.9 );
+				}
+				else {
+					return 'auto';
 				}
 			},
 			'overflow': 'hidden',
 		});
+		var processId = jQuery(this).attr('id');
+		if ( processId ) {
+			redmond_enforce_window_bounds( processId );
+		}
 	});
 }
 
@@ -134,4 +143,37 @@ function redmond_filecommands_to_html( filecommands ) {
 
 function redmond_close_this( obj ) {
 	jQuery(obj).parent().parent().parent().parent().parent().dialog('close');
+}
+
+function redmond_enforce_window_bounds( processId ) {
+	if ( typeof processes[processId] === 'undefined' ) {
+		return;
+	}
+	var dialog = processes[processId];
+	var container = dialog.parent('.ui-dialog');
+	if ( container.length === 0 ) {
+		return;
+	}
+	var viewportWidth = jQuery(window).width();
+	var viewportHeight = jQuery(window).height();
+	var maxWidth = Math.floor( viewportWidth * 0.9 );
+	var maxHeight = Math.floor( viewportHeight * 0.9 );
+	dialog.dialog('option', 'maxWidth', maxWidth );
+	dialog.dialog('option', 'maxHeight', maxHeight );
+	if ( container.outerWidth() > maxWidth ) {
+		dialog.dialog('option', 'width', maxWidth );
+	}
+	if ( container.outerHeight() > maxHeight ) {
+		dialog.dialog('option', 'height', maxHeight );
+	}
+	container.css({
+		'max-width': maxWidth + 'px',
+		'max-height': maxHeight + 'px',
+		'overflow': 'visible'
+	});
+	var titlebar = container.find('.ui-dialog-titlebar');
+	var titleHeight = ( titlebar.length > 0 ) ? titlebar.outerHeight(true) : 0;
+	if ( maxHeight > titleHeight ) {
+		dialog.css('max-height', ( maxHeight - titleHeight ) + 'px' );
+	}
 }
