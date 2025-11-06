@@ -391,12 +391,15 @@ div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dial
 }
 
 div.redmond-dialog-window>.ui-dialog-content {
-	overflow-y: scroll;
+	overflow-y: auto;
+	max-height: 100%;
 }
 
 div.redmond-dialog-window>.ui-dialog-content>article {
 	margin-top: 25px;
-	max-width: 1170px;
+	max-width: 100%;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 div.redmond-dialog-window>.ui-dialog-titlebar {
@@ -444,7 +447,7 @@ div.redmond-dialog-window>.ui-dialog-titlebar>button {
 
 div.redmond-dialog-window>div.ui-dialog-content {
 	background: #FFF;
-	overflow-y: scroll;
+	overflow-y: auto;
 	border: solid 1px;
 	border-top-color: #d4d0c8;
 	border-left-color: #d4d0c8;
@@ -453,6 +456,8 @@ div.redmond-dialog-window>div.ui-dialog-content {
 	min-height: 50px !important;
 	position: relative;
 	height: 100% !important;
+	max-height: 100%;
+	box-sizing: border-box;
 }
 
 .ui-resizable-e {
@@ -601,14 +606,14 @@ li.list-group-item>a {
 
 div.redmond-dialog-window>div.ui-dialog-content>iframe {
 	margin-top: 25px;
-	width: 1070px;
-	height: 500px;
-	min-width: 100%;
-	min-height: 100%;
+	width: 100%;
+	height: 100%;
+	min-width: 0;
+	min-height: 0;
 	max-width: 100%;
 	max-height: 100%;
-	resize: both;
-	overflow: hidden;
+	border: 0;
+	display: block;
 }
 
 div.start-menu-seperator-outer {
