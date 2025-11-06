@@ -45,8 +45,8 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					'background-repeat': 'no-repeat',
 					'background-size': 'contain',
 				});
-				processes[objid].find('button.ui-dialog-titlebar-close').on('click',function(){
-					processes[objid].dialog('destroy');
+                                processes[objid].find('button.ui-dialog-titlebar-close').on('click',function(){
+                                        processes[objid].dialog('close');
 				});
 				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 				jQuery(window).trigger('checkOpenWindows');
@@ -112,7 +112,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					return ( jQuery(window).height() * 0.9 )
 				}
 			},
-			'overflow': 'hidden',
+                        'overflow': 'visible',
 		});
 	});
 }
