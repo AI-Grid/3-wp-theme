@@ -43,6 +43,7 @@ html, body {
 	height: 30px;
 	width: 100%;
 	border-radius: 0;
+	z-index: 10000;
 }
 
 #taskbar-inner {
@@ -155,7 +156,7 @@ button.system-button>span {
 	border-left-color: #d4d0c8;
 	border-right-color: #808080;
 	border-bottom-color: #808080;
-	z-index: 999;
+	z-index: 10010;
 }
 
 #start-menu-inner {

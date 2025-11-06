@@ -26,18 +26,24 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	}
 	if( typeof( processes[objid] ) == 'undefined' ) {
 		jQuery('#modal-holder').append('<div id="' + objid + '"><div class="file-bar"><ul></ul></div>' + content + '</div>');
-		processes[objid] = jQuery("#" + objid);
-		processes[objid].dialog({
-			autoOpen: true,
-			closeOnEscape: false,
-			dialogClass: "redmond-dialog-window",
-			draggable: draggable,
-			resizable: canResize,
-			close: function( event, ui ) {
-				processes[objid].remove();
-				delete processes[objid];
-				jQuery(window).trigger('checkOpenWindows');
-			},
+                processes[objid] = jQuery("#" + objid);
+                processes[objid].dialog({
+                        autoOpen: true,
+                        closeOnEscape: false,
+                        dialogClass: "redmond-dialog-window",
+                        draggable: draggable,
+                        resizable: canResize,
+                        dragStop: function() {
+                                redmond_enforce_window_bounds( objid );
+                        },
+                        resizeStop: function() {
+                                redmond_enforce_window_bounds( objid );
+                        },
+                        close: function( event, ui ) {
+                                processes[objid].remove();
+                                delete processes[objid];
+                                jQuery(window).trigger('checkOpenWindows');
+                        },
 			open: function( event, ui ) {
 				processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
 				processes[objid].parent().find('.ui-dialog-titlebar>span').css({
@@ -146,34 +152,60 @@ function redmond_close_this( obj ) {
 }
 
 function redmond_enforce_window_bounds( processId ) {
-	if ( typeof processes[processId] === 'undefined' ) {
-		return;
-	}
-	var dialog = processes[processId];
-	var container = dialog.parent('.ui-dialog');
-	if ( container.length === 0 ) {
-		return;
-	}
-	var viewportWidth = jQuery(window).width();
-	var viewportHeight = jQuery(window).height();
-	var maxWidth = Math.floor( viewportWidth * 0.9 );
-	var maxHeight = Math.floor( viewportHeight * 0.9 );
-	dialog.dialog('option', 'maxWidth', maxWidth );
-	dialog.dialog('option', 'maxHeight', maxHeight );
-	if ( container.outerWidth() > maxWidth ) {
-		dialog.dialog('option', 'width', maxWidth );
-	}
-	if ( container.outerHeight() > maxHeight ) {
-		dialog.dialog('option', 'height', maxHeight );
-	}
-	container.css({
-		'max-width': maxWidth + 'px',
-		'max-height': maxHeight + 'px',
-		'overflow': 'visible'
-	});
-	var titlebar = container.find('.ui-dialog-titlebar');
-	var titleHeight = ( titlebar.length > 0 ) ? titlebar.outerHeight(true) : 0;
-	if ( maxHeight > titleHeight ) {
-		dialog.css('max-height', ( maxHeight - titleHeight ) + 'px' );
-	}
+        if ( typeof processes[processId] === 'undefined' ) {
+                return;
+        }
+        var dialog = processes[processId];
+        var container = dialog.parent('.ui-dialog');
+        if ( container.length === 0 ) {
+                return;
+        }
+        var viewportWidth = jQuery(window).width();
+        var viewportHeight = jQuery(window).height();
+        var taskbar = jQuery('#taskbar-outer');
+        var taskbarHeight = taskbar.length ? taskbar.outerHeight(true) : 0;
+        var usableHeight = Math.max( viewportHeight - taskbarHeight, 0 );
+        var maxWidth = Math.floor( viewportWidth * 0.9 );
+        var maxHeight = Math.floor( usableHeight * 0.9 );
+        if ( maxHeight <= 0 ) {
+                maxHeight = Math.floor( viewportHeight * 0.9 );
+        }
+        dialog.dialog('option', 'maxWidth', maxWidth );
+        dialog.dialog('option', 'maxHeight', maxHeight );
+        if ( container.outerWidth() > maxWidth ) {
+                dialog.dialog('option', 'width', maxWidth );
+        }
+        if ( container.outerHeight() > maxHeight ) {
+                dialog.dialog('option', 'height', maxHeight );
+        }
+        var containerWidth = container.outerWidth();
+        var containerHeight = container.outerHeight();
+        var maxLeft = Math.max( viewportWidth - containerWidth, 0 );
+        var maxTop = Math.max( usableHeight - containerHeight, 0 );
+        var currentTop = parseInt( container.css('top'), 10 );
+        if ( isNaN( currentTop ) ) {
+                currentTop = container.position().top || 0;
+        }
+        var currentLeft = parseInt( container.css('left'), 10 );
+        if ( isNaN( currentLeft ) ) {
+                currentLeft = container.position().left || 0;
+        }
+        var boundedTop = Math.min( Math.max( currentTop, 0 ), maxTop );
+        var boundedLeft = Math.min( Math.max( currentLeft, 0 ), maxLeft );
+        container.css({
+                'max-width': maxWidth + 'px',
+                'max-height': maxHeight + 'px',
+                'overflow': 'visible',
+                'top': boundedTop + 'px',
+                'left': boundedLeft + 'px'
+        });
+        var titlebar = container.find('.ui-dialog-titlebar');
+        var titleHeight = ( titlebar.length > 0 ) ? titlebar.outerHeight(true) : 0;
+        var contentMaxHeight = maxHeight;
+        if ( usableHeight > 0 && maxHeight === usableHeight ) {
+                contentMaxHeight = usableHeight;
+        }
+        if ( contentMaxHeight > titleHeight ) {
+                dialog.css('max-height', ( contentMaxHeight - titleHeight ) + 'px' );
+        }
 }
