@@ -51,9 +51,10 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					'background-repeat': 'no-repeat',
 					'background-size': 'contain',
 				});
-				processes[objid].find('button.ui-dialog-titlebar-close').on('click',function(){
-					processes[objid].dialog('close');
-				});
+                                processes[objid].parent().find('button.ui-dialog-titlebar-close').off('click.redmond').on('click.redmond',function(e){
+                                        e.preventDefault();
+                                        processes[objid].dialog('close');
+                                });
 				redmond_enforce_window_bounds( objid );
 				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 				jQuery(window).trigger('checkOpenWindows');
@@ -148,7 +149,16 @@ function redmond_filecommands_to_html( filecommands ) {
 }
 
 function redmond_close_this( obj ) {
-	jQuery(obj).parent().parent().parent().parent().parent().dialog('close');
+        var dialogContent = jQuery(obj).closest('.ui-dialog');
+        if ( dialogContent.length ) {
+                dialogContent = dialogContent.find('.ui-dialog-content');
+        }
+        if ( ! dialogContent || ! dialogContent.length ) {
+                dialogContent = jQuery(obj).closest('.ui-dialog-content');
+        }
+        if ( dialogContent && dialogContent.length ) {
+                dialogContent.dialog('close');
+        }
 }
 
 function redmond_enforce_window_bounds( processId ) {
