@@ -57,7 +57,7 @@ jQuery(function() {
 					return ( jQuery(window).height() * 0.9 )
 				}
 			},
-			'overflow': 'hidden',
+                        'overflow': 'visible',
 		});
 	});
 	});
