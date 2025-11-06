@@ -204,51 +204,43 @@ if ( current_user_can( 'publish_posts' ) ) {
 								}
 								$start_menu = redmond_get_menu_as_array( 'start' );
 								foreach ( $start_menu as $ID => $item ) {
+									$item_title = wp_strip_all_tags( $item->title );
+									$item_label = wp_html_excerpt( $item_title, 20, '...' );
+									$item_icon  = ( 'custom' === $item->object ) ? get_theme_mod( 'redmond_external_page_icon', REDMONDURI . '/resources/external.ico' ) : redmond_get_post_icon( $item->object_id );
+									$has_children = ! empty( $item->subs );
 								?>
 									<li>
-										<?php
-											if ( count( $item->subs ) == 0 ) {
-										?>
-										<a href="<?php print esc_url( $item->url ); ?>" <?php if ( esc_html( $item->object ) !== 'custom' ) { ?> class="post-link" data-post-id="<?php print intval( $item->object_id ); ?>" <?php } ?> title="<?php print esc_html( get_the_title( $item->object_id ) ); ?>">
-										<?php
-											}
-										?>
-											<img src="<?php print esc_url( redmond_get_post_icon( $item->object_id ) ); ?>" />
-											<?php print esc_html( substr( esc_html( get_the_title( $item->object_id ) ) , 0 , 20 ) ); ?>
-											<?php
-												if ( count( $item->subs ) > 0 ) {
-											?>
+										<?php if ( ! $has_children ) : ?>
+										<a href="<?php print esc_url( $item->url ); ?>"<?php if ( 'custom' !== $item->object ) : ?> class="post-link" data-post-id="<?php print intval( $item->object_id ); ?>"<?php endif; ?> title="<?php print esc_attr( $item_title ); ?>">
+										<?php endif; ?>
+											<img src="<?php print esc_url( $item_icon ); ?>" />
+											<?php print esc_html( $item_label ); ?>
+										<?php if ( $has_children ) : ?>
 											<span style="margin-left: 20px;" class="glyphicon glyphicon-play pull-right"></span>
 											<div class="archives-outer-wrapper">
 												<ul class="archives-inner-wrapper">
-												<?php
-													foreach ( $item->subs as $ID => $i ) {
-													?>
-														<li>
-															<a href="<?php print esc_url( $item->url ); ?>" <?php if ( esc_html( $i->object ) !== 'custom' ) { ?> class="post-link" data-post-id="<?php print intval( $i->object_id ); ?>" <?php } ?> title="<?php print esc_html( get_the_title( $i->object_id ) ); ?>">
-																<img src="<?php print esc_url( redmond_get_post_icon( $i->object_id ) ); ?>" />
-																<?php print esc_html( substr( esc_html( get_the_title( $i->object_id ) ) , 0 , 20 ) ); ?>
-															</a>
-														</li>
-													<?php
-													}
+												<?php foreach ( $item->subs as $ID => $i ) :
+													$sub_title = wp_strip_all_tags( $i->title );
+													$sub_label = wp_html_excerpt( $sub_title, 20, '...' );
+													$sub_icon  = ( 'custom' === $i->object ) ? get_theme_mod( 'redmond_external_page_icon', REDMONDURI . '/resources/external.ico' ) : redmond_get_post_icon( $i->object_id );
 												?>
+												<li>
+													<a href="<?php print esc_url( $i->url ); ?>"<?php if ( 'custom' !== $i->object ) : ?> class="post-link" data-post-id="<?php print intval( $i->object_id ); ?>"<?php endif; ?> title="<?php print esc_attr( $sub_title ); ?>">
+														<img src="<?php print esc_url( $sub_icon ); ?>" />
+														<?php print esc_html( $sub_label ); ?>
+													</a>
+												</li>
+												<?php endforeach; ?>
 												</ul>
 											</div>
-											<?php
-												}
-											?>
-										<?php
-											if ( count( $item->subs ) == 0 ) {
-										?>
+										<?php endif; ?>
+										<?php if ( ! $has_children ) : ?>
 										</a>
-										<?php
-											}
-										?>
+										<?php endif; ?>
 									</li>
-								<?php
-								}
-							?>
+									<?php
+									}
+								?>
 							</ul>
 						</div>
 					</li>
