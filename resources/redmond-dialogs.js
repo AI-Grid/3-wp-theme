@@ -26,18 +26,24 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	}
 	if( typeof( processes[objid] ) == 'undefined' ) {
 		jQuery('#modal-holder').append('<div id="' + objid + '"><div class="file-bar"><ul></ul></div>' + content + '</div>');
-		processes[objid] = jQuery("#" + objid);
-		processes[objid].dialog({
-			autoOpen: true,
-			closeOnEscape: false,
-			dialogClass: "redmond-dialog-window",
-			draggable: draggable,
-			resizable: canResize,
-			close: function( event, ui ) {
-				processes[objid].remove();
-				delete processes[objid];
-				jQuery(window).trigger('checkOpenWindows');
-			},
+                processes[objid] = jQuery("#" + objid);
+                processes[objid].dialog({
+                        autoOpen: true,
+                        closeOnEscape: false,
+                        dialogClass: "redmond-dialog-window",
+                        draggable: draggable,
+                        resizable: canResize,
+                        dragStop: function() {
+                                redmond_enforce_window_bounds( objid );
+                        },
+                        resizeStop: function() {
+                                redmond_enforce_window_bounds( objid );
+                        },
+                        close: function( event, ui ) {
+                                processes[objid].remove();
+                                delete processes[objid];
+                                jQuery(window).trigger('checkOpenWindows');
+                        },
 			open: function( event, ui ) {
 				processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
 				processes[objid].parent().find('.ui-dialog-titlebar>span').css({
@@ -72,7 +78,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				find_window_on_top();
 			},
 			title: title,
-                        closeText: "\u00d7",
+			closeText: "\u00d7",
 			width: 'auto',
 			height: 'auto',
 		});
@@ -103,6 +109,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 			}
 		});
 		processes[objid].dialog('moveToTop');
+		redmond_enforce_window_bounds( objid );
 		find_window_on_top();
 	}
 	jQuery("div.redmond-dialog-window").each(function() {
@@ -113,16 +120,23 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					return 20;
 				}
 				else {
-					0;
-				}	
+					return 0;
+				}
 			},
 			height: function() {
 				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return ( jQuery(window).height() * 0.9 )
+					return ( jQuery(window).height() * 0.9 );
+				}
+				else {
+					return 'auto';
 				}
 			},
-			'overflow': 'hidden',
+                        'overflow': 'visible',
 		});
+		var processId = jQuery(this).attr('id');
+		if ( processId ) {
+			redmond_enforce_window_bounds( processId );
+		}
 	});
 }
 
