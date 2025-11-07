@@ -60,6 +60,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                         .off('click.redmondClose')
                                         .on('click.redmondClose', function(e){
                                                 e.preventDefault();
+                                                e.stopPropagation();
                                                 redmond_close_this(this);
                                         });
                                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
@@ -100,6 +101,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                         .off('click.redmondClose')
                         .on('click.redmondClose', function(e){
                                 e.preventDefault();
+                                e.stopPropagation();
                                 redmond_close_this(this);
                         });
                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
@@ -145,6 +147,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 contentArea.css({
                         'max-height': maxContentHeight,
                         'overflow-y': 'auto',
+                        'overflow-x': 'auto',
                         'height': ''
                 });
         });
@@ -166,13 +169,24 @@ function redmond_filecommands_to_html( filecommands ) {
 }
 
 function redmond_close_this( obj ) {
-        var dialogContent = jQuery(obj).closest('.ui-dialog-content');
+        var $obj = jQuery(obj);
+        var dialogContent = $obj.closest('.ui-dialog-content');
+
         if ( ! dialogContent.length ) {
-                var dialogWrapper = jQuery(obj).closest('.ui-dialog');
+                var dialogWrapper = $obj.closest('.ui-dialog');
+
                 if ( dialogWrapper.length ) {
-                        dialogContent = dialogWrapper.children('.ui-dialog-content');
+                        var dialogInstance = dialogWrapper.data('ui-dialog') || dialogWrapper.data('dialog');
+
+                        if ( dialogInstance && typeof dialogInstance.close === 'function' ) {
+                                dialogInstance.close();
+                                return;
+                        }
+
+                        dialogContent = dialogWrapper.find('.ui-dialog-content').first();
                 }
         }
+
         if ( dialogContent.length ) {
                 dialogContent.dialog('close');
         }

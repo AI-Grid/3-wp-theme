@@ -42,32 +42,25 @@ jQuery(function() {
 	}
 	jQuery(window).on('resize',function() {
 		jQuery("div.redmond-dialog-window").each(function() {
-			var obj = this;
-			jQuery(this).css({
-				'padding-bottom': function() {
-					if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-						return 20;
-					}
-					else {
-						return 0;
-					}
-				},
-				height: function() {
-					if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-						return ( jQuery(window).height() * 0.9 );
-					}
-					else {
-						return 'auto';
-					}
-				},
-				'overflow': 'hidden',
-			});
-			var processId = jQuery(this).attr('id');
-			if ( processId && typeof redmond_enforce_window_bounds === 'function' ) {
-				redmond_enforce_window_bounds( processId );
-			}
-		});
-	});
+		var obj = this;
+                jQuery(this).css({
+                        'padding-bottom': function() {
+                                if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
+                                        return 20;
+                                }
+                                else {
+                                        0;
+                                }
+                        },
+                        height: function() {
+                                if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
+                                        return ( jQuery(window).height() * 0.9 )
+                                }
+                        },
+                        'overflow': 'visible',
+                });
+        });
+        });
 });
 
 function checkOpenWindows() {
