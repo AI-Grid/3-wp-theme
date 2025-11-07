@@ -164,6 +164,35 @@ button.system-button>span {
 	background: var(--redmond-surface);
 }
 
+#desktop-area {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 30px;
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+#desktop-icons {
+	width: 180px;
+	min-width: 180px;
+	max-width: 25%;
+	height: 100%;
+	overflow-y: auto;
+}
+
+#desktop-window-area {
+	position: relative;
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	overflow: visible;
+}
+
 #start-menu-wrapper {
 	position: fixed;
 	bottom: 30px;
@@ -716,11 +745,11 @@ div.div.start-menu-seperator-outer>div.start-menu-seperator-inner {
 }
 
 #desktop_menu {
-	position: fixed;
+	width: 100%;
 }
 
 table.icon-table {
-	margin: 15px;
+	margin: 0;
 }
 
 table.icon-table td {
@@ -743,14 +772,15 @@ table.icon-table td>a:hover {
 }
 
 #modal-holder {
-	position: fixed;
-	bottom: 0;
+	position: absolute;
+	top: 0;
 	left: 0;
+	right: 0;
+	bottom: 0;
 	display: block;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	z-index: -10;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
 }
 
 div.ui-dialog-content>table.icon-table {

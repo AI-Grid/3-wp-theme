@@ -277,10 +277,18 @@ if ( current_user_can( 'publish_posts' ) ) {
 				</div>
 			</div>
 		</div>
-		<div id="modal-holder"></div>
-		<?php
-		redmond_generate_folder_shortcuts_from_menu( 'desktop' );
-		//print('<pre>');
-		//print_r( wp_kses_allowed_html( 'post' ) );
-		//print('</pre>');
-		?>
+               <div id="desktop-area">
+                       <div id="desktop-icons">
+                               <?php
+                               redmond_generate_folder_shortcuts_from_menu( 'desktop' );
+                               ?>
+                       </div>
+                       <div id="desktop-window-area">
+                               <div id="modal-holder"></div>
+                       </div>
+               </div>
+               <?php
+               //print('<pre>');
+               //print_r( wp_kses_allowed_html( 'post' ) );
+               //print('</pre>');
+               ?>

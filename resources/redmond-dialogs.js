@@ -24,26 +24,31 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	if( typeof( icon ) == 'undefined' ) {
 		icon = redmond_terms.windowIcon;
 	}
-	if( typeof( processes[objid] ) == 'undefined' ) {
-		jQuery('#modal-holder').append('<div id="' + objid + '"><div class="file-bar"><ul></ul></div>' + content + '</div>');
+        var workspaceTarget = jQuery('#desktop-window-area');
+        if ( ! workspaceTarget.length ) {
+                workspaceTarget = jQuery('body');
+        }
+        if( typeof( processes[objid] ) == 'undefined' ) {
+                jQuery('#modal-holder').append('<div id="' + objid + '"><div class="file-bar"><ul></ul></div>' + content + '</div>');
                 processes[objid] = jQuery("#" + objid);
                 processes[objid].dialog({
                         autoOpen: true,
                         closeOnEscape: false,
                         dialogClass: "redmond-dialog-window",
+                        appendTo: workspaceTarget,
                         draggable: draggable,
                         resizable: canResize,
-                        dragStop: function() {
-                                redmond_enforce_window_bounds( objid );
-                        },
-                        resizeStop: function() {
-                                redmond_enforce_window_bounds( objid );
+                        position: {
+                                my: 'center',
+                                at: 'center',
+                                of: workspaceTarget,
+                                collision: 'fit'
                         },
                         close: function( event, ui ) {
                                 processes[objid].remove();
                                 delete processes[objid];
-                                jQuery(window).trigger('checkOpenWindows');
-                        },
+				jQuery(window).trigger('checkOpenWindows');
+			},
 			open: function( event, ui ) {
 				processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
 				processes[objid].parent().find('.ui-dialog-titlebar>span').css({
@@ -58,10 +63,10 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                                 redmond_close_this(this);
                                         });
                                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
-				jQuery(window).trigger('checkOpenWindows');
-				processes[objid].parent().on('click',function() {
-					find_window_on_top();
-				});
+                                jQuery(window).trigger('checkOpenWindows');
+                                processes[objid].parent().on('click',function() {
+                                        find_window_on_top();
+                                });
 				processes[objid].find('iframe').on('click',function() {
 					processes[objid].dialog('moveToTop');
 					find_window_on_top();
@@ -108,10 +113,16 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
 			}
 		});
-		processes[objid].dialog('moveToTop');
-		redmond_enforce_window_bounds( objid );
-		find_window_on_top();
-	}
+                processes[objid].dialog('moveToTop');
+                processes[objid].dialog('option', 'appendTo', workspaceTarget);
+                processes[objid].dialog('option', 'position', {
+                        my: 'center',
+                        at: 'center',
+                        of: workspaceTarget,
+                        collision: 'fit'
+                });
+                find_window_on_top();
+        }
 	jQuery("div.redmond-dialog-window").each(function() {
 		var obj = this;
 		jQuery(this).css({
