@@ -83,7 +83,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				find_window_on_top();
 			},
 			title: title,
-                        closeText: "\u00d7",
+			closeText: "\u00d7",
 			width: 'auto',
 			height: 'auto',
 		});

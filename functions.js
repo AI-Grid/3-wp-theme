@@ -42,24 +42,31 @@ jQuery(function() {
 	}
 	jQuery(window).on('resize',function() {
 		jQuery("div.redmond-dialog-window").each(function() {
-		var obj = this;
-		jQuery(this).css({
-			'padding-bottom': function() {
-				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return 20;
-				}
-				else {
-					0;
-				}	
-			},
-			height: function() {
-				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return ( jQuery(window).height() * 0.9 )
-				}
-			},
-			'overflow': 'hidden',
+			var obj = this;
+			jQuery(this).css({
+				'padding-bottom': function() {
+					if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
+						return 20;
+					}
+					else {
+						return 0;
+					}
+				},
+				height: function() {
+					if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
+						return ( jQuery(window).height() * 0.9 );
+					}
+					else {
+						return 'auto';
+					}
+				},
+				'overflow': 'hidden',
+			});
+			var processId = jQuery(this).attr('id');
+			if ( processId && typeof redmond_enforce_window_bounds === 'function' ) {
+				redmond_enforce_window_bounds( processId );
+			}
 		});
-	});
 	});
 });
 
@@ -421,33 +428,33 @@ function redmondParseAjaxResponse( returned ) {
 function do_redmond_error_window( message ) {
 	var contents = '';
 	contents += '<p>' + message +'</p>' + "\r\n";
-	contents += '<span class="button-outer dialog-close-button"><button class="system-button" onclick="jQuery(this).parent().parent().dialog(\'close\')">' + redmond_terms.closetext + '</button></span>' + "\r\n";
-	redmond_window('error',redmond_terms.errTitle,contents,null,false,true,redmond_terms.errorIcon);
+        contents += '<span class="button-outer dialog-close-button"><button class="system-button" type="button" onclick="redmond_close_this(this); return false;">' + redmond_terms.closetext + '</button></span>' + "\r\n";
+        redmond_window('error',redmond_terms.errTitle,contents,null,false,true,redmond_terms.errorIcon);
 	processes.error.css({
 		'overflow-y': 'hidden',
-		background:'#d4d0c8',
-		'background-color':'#d4d0c8',
+		background: '#1f2937',
+		'background-color': '#1f2937',
 		padding: 10,
 		'max-width': 700,
 	});
-	processes.error.find('div.file-bar').css({
-		display:'none',
+        processes.error.find('div.file-bar').css({
+                display:'none',
 	});
 	sounds.error.play();
 }
 
 function redmond_comment_field( postid ) {
 	html = '<p>Test Content</p>';
-	redmond_window('comment_for_'+postid,redmond_terms.errTitle,html,null,false,true,redmond_terms.errorIcon);
+        redmond_window('comment_for_' + postid,redmond_terms.errTitle,html,null,false,true,redmond_terms.errorIcon);
 	processes.error.css({
 		'overflow-y': 'hidden',
-		background:'#d4d0c8',
-		'background-color':'#d4d0c8',
+		background: '#1f2937',
+		'background-color': '#1f2937',
 		padding: 10,
 		'max-width': 700,
 	});
-	processes.error.find('div.file-bar').css({
-		display:'none',
+        processes.error.find('div.file-bar').css({
+                display:'none',
 	});
 }
 
