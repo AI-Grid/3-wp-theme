@@ -141,7 +141,8 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 dialogWrapper.css({
                         'padding-bottom': dialogWrapper.outerHeight() > maxWindowHeight ? 20 : '',
                         'max-height': maxWindowHeight,
-                        'overflow': 'visible'
+                        'overflow-y': 'auto',
+                        'overflow-x': 'visible'
                 });
 
                 contentArea.css({
