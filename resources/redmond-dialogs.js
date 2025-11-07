@@ -53,7 +53,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				});
                                 processes[objid].parent().find('button.ui-dialog-titlebar-close').off('click.redmond').on('click.redmond',function(e){
                                         e.preventDefault();
-                                        processes[objid].dialog('close');
+                                        redmond_close_this(this);
                                 });
 				redmond_enforce_window_bounds( objid );
 				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());

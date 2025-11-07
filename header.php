@@ -18,7 +18,7 @@ $current_user = wp_get_current_user();
 			wp_head();
 		?>
 	</head>
-	<body <?php body_class( 'custom-background' ); ?>>
+<body <?php body_class( 'custom-background dark-mode' ); ?>>
 		<?php
 		if ( function_exists( 'wp_body_open' ) ) {
 			wp_body_open();
