@@ -51,12 +51,13 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					'background-repeat': 'no-repeat',
 					'background-size': 'contain',
 				});
-                                processes[objid].parent().find('button.ui-dialog-titlebar-close').off('click.redmond').on('click.redmond',function(e){
-                                        e.preventDefault();
-                                        redmond_close_this(this);
-                                });
-				redmond_enforce_window_bounds( objid );
-				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
+                                processes[objid].parent().find('button.ui-dialog-titlebar-close')
+                                        .off('click.redmondClose')
+                                        .on('click.redmondClose', function(e){
+                                                e.preventDefault();
+                                                redmond_close_this(this);
+                                        });
+                                processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 				jQuery(window).trigger('checkOpenWindows');
 				processes[objid].parent().on('click',function() {
 					find_window_on_top();
@@ -84,13 +85,19 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	}
 	else {
 		processes[objid].html('<div class="file-bar"><ul></ul></div>' + content + '</div>');
-		processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
-		processes[objid].parent().find('.ui-dialog-titlebar>span').css({
-			'background-image': 'url(' + icon + ')',
-			'background-repeat': 'no-repeat',
-			'background-size': 'contain',
-		});
-		processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
+                processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
+                processes[objid].parent().find('.ui-dialog-titlebar>span').css({
+                        'background-image': 'url(' + icon + ')',
+                        'background-repeat': 'no-repeat',
+                        'background-size': 'contain',
+                });
+                processes[objid].parent().find('button.ui-dialog-titlebar-close')
+                        .off('click.redmondClose')
+                        .on('click.redmondClose', function(e){
+                                e.preventDefault();
+                                redmond_close_this(this);
+                        });
+                processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 		jQuery(window).trigger('checkOpenWindows');
 		processes[objid].parent().on('click',function() {
 			find_window_on_top();
@@ -149,73 +156,14 @@ function redmond_filecommands_to_html( filecommands ) {
 }
 
 function redmond_close_this( obj ) {
-        var dialogContent = jQuery(obj).closest('.ui-dialog');
+        var dialogContent = jQuery(obj).closest('.ui-dialog-content');
+        if ( ! dialogContent.length ) {
+                var dialogWrapper = jQuery(obj).closest('.ui-dialog');
+                if ( dialogWrapper.length ) {
+                        dialogContent = dialogWrapper.children('.ui-dialog-content');
+                }
+        }
         if ( dialogContent.length ) {
-                dialogContent = dialogContent.find('.ui-dialog-content');
-        }
-        if ( ! dialogContent || ! dialogContent.length ) {
-                dialogContent = jQuery(obj).closest('.ui-dialog-content');
-        }
-        if ( dialogContent && dialogContent.length ) {
                 dialogContent.dialog('close');
-        }
-}
-
-function redmond_enforce_window_bounds( processId ) {
-        if ( typeof processes[processId] === 'undefined' ) {
-                return;
-        }
-        var dialog = processes[processId];
-        var container = dialog.parent('.ui-dialog');
-        if ( container.length === 0 ) {
-                return;
-        }
-        var viewportWidth = jQuery(window).width();
-        var viewportHeight = jQuery(window).height();
-        var taskbar = jQuery('#taskbar-outer');
-        var taskbarHeight = taskbar.length ? taskbar.outerHeight(true) : 0;
-        var usableHeight = Math.max( viewportHeight - taskbarHeight, 0 );
-        var maxWidth = Math.floor( viewportWidth * 0.9 );
-        var maxHeight = Math.floor( usableHeight * 0.9 );
-        if ( maxHeight <= 0 ) {
-                maxHeight = Math.floor( viewportHeight * 0.9 );
-        }
-        dialog.dialog('option', 'maxWidth', maxWidth );
-        dialog.dialog('option', 'maxHeight', maxHeight );
-        if ( container.outerWidth() > maxWidth ) {
-                dialog.dialog('option', 'width', maxWidth );
-        }
-        if ( container.outerHeight() > maxHeight ) {
-                dialog.dialog('option', 'height', maxHeight );
-        }
-        var containerWidth = container.outerWidth();
-        var containerHeight = container.outerHeight();
-        var maxLeft = Math.max( viewportWidth - containerWidth, 0 );
-        var maxTop = Math.max( usableHeight - containerHeight, 0 );
-        var currentTop = parseInt( container.css('top'), 10 );
-        if ( isNaN( currentTop ) ) {
-                currentTop = container.position().top || 0;
-        }
-        var currentLeft = parseInt( container.css('left'), 10 );
-        if ( isNaN( currentLeft ) ) {
-                currentLeft = container.position().left || 0;
-        }
-        var boundedTop = Math.min( Math.max( currentTop, 0 ), maxTop );
-        var boundedLeft = Math.min( Math.max( currentLeft, 0 ), maxLeft );
-        container.css({
-                'max-width': maxWidth + 'px',
-                'max-height': maxHeight + 'px',
-                'overflow': 'visible',
-                'top': boundedTop + 'px',
-                'left': boundedLeft + 'px'
-        });
-        var titlebar = container.find('.ui-dialog-titlebar');
-        var titleHeight = ( titlebar.length > 0 ) ? titlebar.outerHeight(true) : 0;
-        var contentMaxHeight = maxHeight;
-        if ( usableHeight > 0 && maxHeight === usableHeight ) {
-                contentMaxHeight = usableHeight;
-        }
-        if ( contentMaxHeight > titleHeight ) {
-                dialog.css('max-height', ( contentMaxHeight - titleHeight ) + 'px' );
         }
 }
