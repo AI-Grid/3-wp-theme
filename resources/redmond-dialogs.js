@@ -45,10 +45,13 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					'background-repeat': 'no-repeat',
 					'background-size': 'contain',
 				});
-				processes[objid].find('button.ui-dialog-titlebar-close').on('click',function(){
-					processes[objid].dialog('destroy');
-				});
-				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
+                                processes[objid].parent().find('button.ui-dialog-titlebar-close')
+                                        .off('click.redmondClose')
+                                        .on('click.redmondClose', function(e){
+                                                e.preventDefault();
+                                                redmond_close_this(this);
+                                        });
+                                processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 				jQuery(window).trigger('checkOpenWindows');
 				processes[objid].parent().on('click',function() {
 					find_window_on_top();
@@ -76,13 +79,19 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	}
 	else {
 		processes[objid].html('<div class="file-bar"><ul></ul></div>' + content + '</div>');
-		processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
-		processes[objid].parent().find('.ui-dialog-titlebar>span').css({
-			'background-image': 'url(' + icon + ')',
-			'background-repeat': 'no-repeat',
-			'background-size': 'contain',
-		});
-		processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
+                processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
+                processes[objid].parent().find('.ui-dialog-titlebar>span').css({
+                        'background-image': 'url(' + icon + ')',
+                        'background-repeat': 'no-repeat',
+                        'background-size': 'contain',
+                });
+                processes[objid].parent().find('button.ui-dialog-titlebar-close')
+                        .off('click.redmondClose')
+                        .on('click.redmondClose', function(e){
+                                e.preventDefault();
+                                redmond_close_this(this);
+                        });
+                processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
 		jQuery(window).trigger('checkOpenWindows');
 		processes[objid].parent().on('click',function() {
 			find_window_on_top();
@@ -133,5 +142,14 @@ function redmond_filecommands_to_html( filecommands ) {
 }
 
 function redmond_close_this( obj ) {
-	jQuery(obj).parent().parent().parent().parent().parent().dialog('close');
+        var dialogContent = jQuery(obj).closest('.ui-dialog-content');
+        if ( ! dialogContent.length ) {
+                var dialogWrapper = jQuery(obj).closest('.ui-dialog');
+                if ( dialogWrapper.length ) {
+                        dialogContent = dialogWrapper.children('.ui-dialog-content');
+                }
+        }
+        if ( dialogContent.length ) {
+                dialogContent.dialog('close');
+        }
 }
