@@ -43,24 +43,24 @@ jQuery(function() {
 	jQuery(window).on('resize',function() {
 		jQuery("div.redmond-dialog-window").each(function() {
 		var obj = this;
-		jQuery(this).css({
-			'padding-bottom': function() {
-				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return 20;
-				}
-				else {
-					0;
-				}	
-			},
-			height: function() {
-				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return ( jQuery(window).height() * 0.9 )
-				}
-			},
-			'overflow': 'hidden',
-		});
-	});
-	});
+                jQuery(this).css({
+                        'padding-bottom': function() {
+                                if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
+                                        return 20;
+                                }
+                                else {
+                                        0;
+                                }
+                        },
+                        height: function() {
+                                if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
+                                        return ( jQuery(window).height() * 0.9 )
+                                }
+                        },
+                        'overflow': 'visible',
+                });
+        });
+        });
 });
 
 function checkOpenWindows() {
