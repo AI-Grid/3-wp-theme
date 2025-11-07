@@ -123,32 +123,31 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 });
                 find_window_on_top();
         }
-	jQuery("div.redmond-dialog-window").each(function() {
-		var obj = this;
-		jQuery(this).css({
-			'padding-bottom': function() {
-				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return 20;
-				}
-				else {
-					return 0;
-				}
-			},
-			height: function() {
-				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return ( jQuery(window).height() * 0.9 );
-				}
-				else {
-					return 'auto';
-				}
-			},
-                        'overflow': 'visible',
-		});
-		var processId = jQuery(this).attr('id');
-		if ( processId ) {
-			redmond_enforce_window_bounds( processId );
-		}
-	});
+        jQuery("div.redmond-dialog-window").each(function() {
+                var dialogWrapper = jQuery(this);
+                var workspace = jQuery('#desktop-window-area');
+                var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
+                var maxWindowHeight = Math.floor(viewportHeight * 0.9);
+                var titleBarHeight = dialogWrapper.children('.ui-dialog-titlebar').outerHeight(true) || 0;
+                var contentArea = dialogWrapper.children('.ui-dialog-content');
+                var maxContentHeight = maxWindowHeight - titleBarHeight;
+
+                if ( maxContentHeight < 120 ) {
+                        maxContentHeight = Math.max(viewportHeight - titleBarHeight - 20, 120);
+                }
+
+                dialogWrapper.css({
+                        'padding-bottom': dialogWrapper.outerHeight() > maxWindowHeight ? 20 : '',
+                        'max-height': maxWindowHeight,
+                        'overflow': 'visible'
+                });
+
+                contentArea.css({
+                        'max-height': maxContentHeight,
+                        'overflow-y': 'auto',
+                        'height': ''
+                });
+        });
 }
 
 function redmond_filecommands_to_html( filecommands ) {

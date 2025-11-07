@@ -438,7 +438,6 @@ div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dial
 
 div.redmond-dialog-window>.ui-dialog-content {
 	overflow-y: auto;
-	max-height: 100%;
 }
 
 div.redmond-dialog-window>.ui-dialog-content>article {
@@ -495,8 +494,6 @@ div.redmond-dialog-window>div.ui-dialog-content {
 	border-bottom-color: var(--redmond-border-dark);
 	min-height: 50px !important;
 	position: relative;
-	height: 100% !important;
-	max-height: 100%;
 	box-sizing: border-box;
 }
 
