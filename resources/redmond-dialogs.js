@@ -83,7 +83,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				find_window_on_top();
 			},
 			title: title,
-                        closeText: "\u00d7",
+			closeText: "\u00d7",
 			width: 'auto',
 			height: 'auto',
 		});
@@ -131,16 +131,23 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 					return 20;
 				}
 				else {
-					0;
-				}	
+					return 0;
+				}
 			},
 			height: function() {
 				if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-					return ( jQuery(window).height() * 0.9 )
+					return ( jQuery(window).height() * 0.9 );
+				}
+				else {
+					return 'auto';
 				}
 			},
-			'overflow': 'hidden',
+                        'overflow': 'visible',
 		});
+		var processId = jQuery(this).attr('id');
+		if ( processId ) {
+			redmond_enforce_window_bounds( processId );
+		}
 	});
 }
 
