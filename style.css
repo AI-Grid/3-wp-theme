@@ -43,7 +43,7 @@ code {
 html, body {
         height: 100%;
         overflow-x: hidden;
-        overflow-y: hidden;
+        overflow-y: scroll;
         background-color: var(--redmond-bg);
         background-image: radial-gradient(circle at 15% 20%, rgba(255,77,79,0.35), rgba(5,6,7,0.95) 55%);
         background-repeat: no-repeat;

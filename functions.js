@@ -207,10 +207,13 @@ function open_this_as_redmond_dialog( obj ) {
 		open_post_as_dialog( parseInt( jQuery(obj).attr('data-post-id') , 10 ) );
 	}
 	else {
-		var html = '<iframe src="' + jQuery(obj).attr('href') + '"></iframe>';
-		var process = new Date().getTime();
-		redmond_window( process , jQuery(obj).attr('title') , html , false , true , true , redmond_terms.externalPageIcon );
-		processes[process].css({'overflow-y':'hidden'});
+                var html = '<iframe src="' + jQuery(obj).attr('href') + '"></iframe>';
+                var process = new Date().getTime();
+                redmond_window( process , jQuery(obj).attr('title') , html , false , true , true , redmond_terms.externalPageIcon );
+                processes[process].css({
+                        'overflow-y': 'scroll',
+                        'overflow-x': 'auto'
+                });
 	}
 }
 
