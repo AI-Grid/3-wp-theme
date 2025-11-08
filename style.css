@@ -464,24 +464,43 @@ div.redmond-dialog-window>.ui-dialog-titlebar>span {
 }
 
 div.redmond-dialog-window>.ui-dialog-titlebar>button {
-	position: absolute;
-	top: 1px;
-	right: 1px;
-	background: var(--redmond-surface);
-	background-color: var(--redmond-surface);
-	min-height: 20px;
-	border: solid 1px;
-	border-top-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-dark);
-	border-bottom-color: var(--redmond-border-dark);
-	display: inline-block;
-	padding: 0;
-	line-height: 0;
-	height: auto;
-	width: 20px;
-	font-weight: 700;
-	color: var(--redmond-text);
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        background: var(--redmond-surface);
+        background-color: var(--redmond-surface);
+        min-height: 20px;
+        border: solid 1px;
+        border-top-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-dark);
+        border-bottom-color: var(--redmond-border-dark);
+        display: inline-block;
+        padding: 0;
+        line-height: 1;
+        height: auto;
+        width: 22px;
+        font-weight: 700;
+        color: var(--redmond-text);
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        padding: 0;
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button .redmond-close-text {
+        line-height: 1;
+        font-size: 16px;
+        display: block;
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button:focus-visible {
+        outline: 2px solid var(--redmond-accent);
+        outline-offset: 1px;
 }
 
 div.redmond-dialog-window>div.ui-dialog-content {

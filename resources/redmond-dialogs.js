@@ -51,12 +51,14 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 			},
 			open: function( event, ui ) {
 				processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
-				processes[objid].parent().find('.ui-dialog-titlebar>span').css({
-					'background-image': 'url(' + icon + ')',
-					'background-repeat': 'no-repeat',
-					'background-size': 'contain',
-				});
-                                processes[objid].parent().find('button.ui-dialog-titlebar-close')
+                                processes[objid].parent().find('.ui-dialog-titlebar>span').css({
+                                        'background-image': 'url(' + icon + ')',
+                                        'background-repeat': 'no-repeat',
+                                        'background-size': 'contain',
+                                });
+                                var closeButton = processes[objid].parent().find('button.ui-dialog-titlebar-close');
+                                redmond_style_close_button(closeButton);
+                                closeButton
                                         .off('click.redmondClose')
                                         .on('click.redmondClose', function(e){
                                                 e.preventDefault();
@@ -84,7 +86,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				find_window_on_top();
 			},
 			title: title,
-			closeText: "\u00d7",
+			closeText: '',
 			width: 'auto',
 			height: 'auto',
 		});
@@ -97,7 +99,9 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                         'background-repeat': 'no-repeat',
                         'background-size': 'contain',
                 });
-                processes[objid].parent().find('button.ui-dialog-titlebar-close')
+                var closeButton = processes[objid].parent().find('button.ui-dialog-titlebar-close');
+                redmond_style_close_button(closeButton);
+                closeButton
                         .off('click.redmondClose')
                         .on('click.redmondClose', function(e){
                                 e.preventDefault();
@@ -139,18 +143,30 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 }
 
                 dialogWrapper.css({
-                        'padding-bottom': dialogWrapper.outerHeight() > maxWindowHeight ? 20 : '',
+                        'height': '',
+                        'padding-bottom': '',
                         'max-height': maxWindowHeight,
-                        'overflow-y': 'auto',
                         'overflow-x': 'visible'
                 });
 
+                var wrapperNeedsScroll = dialogWrapper.outerHeight() > maxWindowHeight;
+
+                dialogWrapper.css({
+                        'padding-bottom': wrapperNeedsScroll ? 20 : '',
+                        'overflow-y': wrapperNeedsScroll ? 'auto' : 'visible',
+                        'height': wrapperNeedsScroll ? maxWindowHeight : ''
+                });
+
                 contentArea.css({
+                        'height': '',
                         'max-height': maxContentHeight,
                         'overflow-y': 'auto',
-                        'overflow-x': 'auto',
-                        'height': ''
+                        'overflow-x': 'auto'
                 });
+
+                if ( contentArea.outerHeight() > maxContentHeight ) {
+                        contentArea.css('height', maxContentHeight);
+                }
         });
 }
 
@@ -167,6 +183,31 @@ function redmond_filecommands_to_html( filecommands ) {
 	html += '	</ul>' + "\r\n";
 	html += '</li>' + "\r\n";
 	return html;
+}
+
+function redmond_style_close_button( closeButton ) {
+        if ( ! closeButton || ! closeButton.length ) {
+                return;
+        }
+
+        var closeLabel = ( window.redmond_terms && redmond_terms.close ) ? redmond_terms.close : 'Close';
+
+        closeButton
+                .removeClass('ui-button-icon-only')
+                .addClass('redmond-close-button')
+                .attr('title', closeLabel)
+                .attr('aria-label', closeLabel);
+
+        closeButton.find('span.ui-icon').remove();
+        closeButton.find('span.ui-button-icon-space').remove();
+        closeButton
+                .contents()
+                .filter(function(){
+                        return this.nodeType === 3;
+                })
+                .remove();
+        closeButton.find('span.redmond-close-text').remove();
+        closeButton.append('<span class="redmond-close-text" aria-hidden="true">&times;</span>');
 }
 
 function redmond_close_this( obj ) {
