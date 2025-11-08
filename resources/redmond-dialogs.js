@@ -86,7 +86,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				find_window_on_top();
 			},
 			title: title,
-			closeText: "\u00d7",
+			closeText: '',
 			width: 'auto',
 			height: 'auto',
 		});
@@ -199,6 +199,13 @@ function redmond_style_close_button( closeButton ) {
                 .attr('aria-label', closeLabel);
 
         closeButton.find('span.ui-icon').remove();
+        closeButton.find('span.ui-button-icon-space').remove();
+        closeButton
+                .contents()
+                .filter(function(){
+                        return this.nodeType === 3;
+                })
+                .remove();
         closeButton.find('span.redmond-close-text').remove();
         closeButton.append('<span class="redmond-close-text" aria-hidden="true">&times;</span>');
 }
