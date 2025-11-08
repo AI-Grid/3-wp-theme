@@ -62,9 +62,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                 redmond_style_close_button(closeButton);
                                 closeButton
                                         .off('click.redmondClose')
-                                        .on('click.redmondClose', function(e){
-                                                e.preventDefault();
-                                                e.stopPropagation();
+                                        .on('click.redmondClose', function(){
                                                 redmond_close_this(this);
                                         });
                                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
@@ -96,11 +94,12 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 			title: title,
 			closeText: '',
 			width: 'auto',
-			height: 'auto',
-		});
-	}
-	else {
-		processes[objid].html('<div class="file-bar"><ul></ul></div>' + content + '</div>');
+                        height: 'auto',
+                });
+                processes[objid].parent().attr('data-redmond-limit-height', canResize ? 'true' : 'false');
+        }
+        else {
+                processes[objid].html('<div class="file-bar"><ul></ul></div>' + content + '</div>');
                 processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
                 processes[objid].dialog('option', {
                         appendTo: workspaceTarget,
@@ -116,6 +115,8 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                         closeText: ''
                 });
 
+                processes[objid].parent().attr('data-redmond-limit-height', canResize ? 'true' : 'false');
+
                 processes[objid].parent().removeClass('redmond-dialog-hidden');
                 processes[objid].parent().find('.ui-dialog-titlebar>span').css({
                         'background-image': 'url(' + icon + ')',
@@ -126,9 +127,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 redmond_style_close_button(closeButton);
                 closeButton
                         .off('click.redmondClose')
-                        .on('click.redmondClose', function(e){
-                                e.preventDefault();
-                                e.stopPropagation();
+                        .on('click.redmondClose', function(){
                                 redmond_close_this(this);
                         });
                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
@@ -176,6 +175,7 @@ function redmond_style_close_button( closeButton ) {
         closeButton
                 .removeClass('ui-button-icon-only')
                 .addClass('redmond-close-button')
+                .attr('type', 'button')
                 .attr('title', closeLabel)
                 .attr('aria-label', closeLabel);
 
@@ -204,28 +204,30 @@ function redmond_adjust_dialog_sizes() {
 
         jQuery('div.redmond-dialog-window').each(function() {
                 var dialogWrapper = jQuery(this);
+                var shouldCapHeight = dialogWrapper.attr('data-redmond-limit-height') !== 'false';
                 var titleBar = dialogWrapper.children('.ui-dialog-titlebar');
                 var contentArea = dialogWrapper.children('.ui-dialog-content');
                 var titleBarHeight = titleBar.outerHeight(true) || 0;
                 var contentHeight = Math.max(targetWindowHeight - titleBarHeight, 0);
 
                 dialogWrapper.css({
-                        'height': targetWindowHeight,
-                        'min-height': targetWindowHeight,
-                        'max-height': targetWindowHeight,
-                        'overflow-y': 'hidden',
+                        'height': '',
+                        'min-height': '',
+                        'max-height': shouldCapHeight && targetWindowHeight > 0 ? targetWindowHeight : '',
+                        'overflow-y': shouldCapHeight ? 'hidden' : 'visible',
                         'overflow-x': 'visible',
                         'padding-bottom': ''
                 });
 
                 var contentStyles = {
                         'overflow-y': 'auto',
-                        'overflow-x': 'auto'
+                        'overflow-x': 'auto',
+                        'min-height': ''
                 };
 
                 if ( contentHeight > 0 ) {
-                        contentStyles.height = contentHeight;
-                        contentStyles['max-height'] = contentHeight;
+                        contentStyles.height = '';
+                        contentStyles['max-height'] = shouldCapHeight ? contentHeight : '';
                 } else {
                         contentStyles.height = '';
                         contentStyles['max-height'] = '';
@@ -242,11 +244,14 @@ function redmond_adjust_dialog_sizes() {
                                         at: 'center top+40',
                                         of: positionTarget,
                                         collision: 'fit'
-                                }
+                                },
+                                height: 'auto'
                         };
 
-                        if ( contentHeight > 0 ) {
-                                dialogOptions.height = contentHeight;
+                        if ( shouldCapHeight && targetWindowHeight > 0 ) {
+                                dialogOptions.maxHeight = targetWindowHeight;
+                        } else {
+                                dialogOptions.maxHeight = false;
                         }
 
                         contentArea.dialog('option', dialogOptions);
@@ -262,18 +267,11 @@ function redmond_close_this( obj ) {
                 var dialogWrapper = $obj.closest('.ui-dialog');
 
                 if ( dialogWrapper.length ) {
-                        var dialogInstance = dialogWrapper.data('ui-dialog') || dialogWrapper.data('dialog');
-
-                        if ( dialogInstance && typeof dialogInstance.close === 'function' ) {
-                                dialogInstance.close();
-                                return;
-                        }
-
                         dialogContent = dialogWrapper.find('.ui-dialog-content').first();
                 }
         }
 
-        if ( dialogContent.length ) {
+        if ( dialogContent.length && typeof dialogContent.dialog === 'function' ) {
                 dialogContent.dialog('close');
         }
 }
