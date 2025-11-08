@@ -39,23 +39,24 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                         draggable: draggable,
                         resizable: canResize,
                         position: {
-                                my: 'center',
-                                at: 'center',
+                                my: 'center top',
+                                at: 'center top+40',
                                 of: workspaceTarget,
                                 collision: 'fit'
                         },
                         close: function( event, ui ) {
-                                processes[objid].remove();
-                                delete processes[objid];
-				jQuery(window).trigger('checkOpenWindows');
-			},
-			open: function( event, ui ) {
-				processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
+                                processes[objid].parent().addClass('redmond-dialog-hidden');
+                                jQuery(window).trigger('checkOpenWindows');
+                        },
+                        open: function( event, ui ) {
+                                processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
                                 processes[objid].parent().find('.ui-dialog-titlebar>span').css({
                                         'background-image': 'url(' + icon + ')',
                                         'background-repeat': 'no-repeat',
                                         'background-size': 'contain',
                                 });
+                                processes[objid].parent().removeClass('redmond-dialog-hidden');
+
                                 var closeButton = processes[objid].parent().find('button.ui-dialog-titlebar-close');
                                 redmond_style_close_button(closeButton);
                                 closeButton
@@ -79,12 +80,14 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 						var fullwidth = parseInt( processes[objid].find('span.dialog-close-button').parent().css('width') , 10 );
 						return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
 					}
-				});
-			},
-			focus: function( event, ui ) {
-				processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
-				find_window_on_top();
-			},
+                                });
+
+                                redmond_adjust_dialog_sizes();
+                        },
+                        focus: function( event, ui ) {
+                                processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
+                                find_window_on_top();
+                        },
 			title: title,
 			closeText: '',
 			width: 'auto',
@@ -94,6 +97,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	else {
 		processes[objid].html('<div class="file-bar"><ul></ul></div>' + content + '</div>');
                 processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
+                processes[objid].parent().removeClass('redmond-dialog-hidden');
                 processes[objid].parent().find('.ui-dialog-titlebar>span').css({
                         'background-image': 'url(' + icon + ')',
                         'background-repeat': 'no-repeat',
@@ -119,55 +123,18 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 				return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
 			}
 		});
+                processes[objid].dialog('open');
                 processes[objid].dialog('moveToTop');
                 processes[objid].dialog('option', 'appendTo', workspaceTarget);
                 processes[objid].dialog('option', 'position', {
-                        my: 'center',
-                        at: 'center',
+                        my: 'center top',
+                        at: 'center top+40',
                         of: workspaceTarget,
                         collision: 'fit'
                 });
                 find_window_on_top();
         }
-        jQuery("div.redmond-dialog-window").each(function() {
-                var dialogWrapper = jQuery(this);
-                var workspace = jQuery('#desktop-window-area');
-                var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
-                var maxWindowHeight = Math.floor(viewportHeight * 0.9);
-                var titleBarHeight = dialogWrapper.children('.ui-dialog-titlebar').outerHeight(true) || 0;
-                var contentArea = dialogWrapper.children('.ui-dialog-content');
-                var maxContentHeight = maxWindowHeight - titleBarHeight;
-
-                if ( maxContentHeight < 120 ) {
-                        maxContentHeight = Math.max(viewportHeight - titleBarHeight - 20, 120);
-                }
-
-                dialogWrapper.css({
-                        'height': '',
-                        'padding-bottom': '',
-                        'max-height': maxWindowHeight,
-                        'overflow-x': 'visible'
-                });
-
-                var wrapperNeedsScroll = dialogWrapper.outerHeight() > maxWindowHeight;
-
-                dialogWrapper.css({
-                        'padding-bottom': wrapperNeedsScroll ? 20 : '',
-                        'overflow-y': wrapperNeedsScroll ? 'auto' : 'visible',
-                        'height': wrapperNeedsScroll ? maxWindowHeight : ''
-                });
-
-                contentArea.css({
-                        'height': '',
-                        'max-height': maxContentHeight,
-                        'overflow-y': 'auto',
-                        'overflow-x': 'auto'
-                });
-
-                if ( contentArea.outerHeight() > maxContentHeight ) {
-                        contentArea.css('height', maxContentHeight);
-                }
-        });
+        redmond_adjust_dialog_sizes();
 }
 
 function redmond_filecommands_to_html( filecommands ) {
@@ -208,6 +175,50 @@ function redmond_style_close_button( closeButton ) {
                 .remove();
         closeButton.find('span.redmond-close-text').remove();
         closeButton.append('<span class="redmond-close-text" aria-hidden="true">&times;</span>');
+}
+
+function redmond_adjust_dialog_sizes() {
+        var workspace = jQuery('#desktop-window-area');
+        var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
+        var minWindowHeight = 200;
+        var verticalBuffer = 60;
+        var maxWindowHeight = Math.max(viewportHeight - verticalBuffer, Math.min(viewportHeight, minWindowHeight));
+        var targetWindowHeight = Math.min(Math.max(Math.floor(viewportHeight * 0.5), minWindowHeight), maxWindowHeight);
+        var positionTarget = workspace.length ? workspace : jQuery(window);
+
+        jQuery('div.redmond-dialog-window').each(function() {
+                var dialogWrapper = jQuery(this);
+                var titleBar = dialogWrapper.children('.ui-dialog-titlebar');
+                var contentArea = dialogWrapper.children('.ui-dialog-content');
+                var titleBarHeight = titleBar.outerHeight(true) || 0;
+                var contentHeight = Math.max(targetWindowHeight - titleBarHeight, 120);
+
+                dialogWrapper.css({
+                        'height': targetWindowHeight,
+                        'max-height': maxWindowHeight,
+                        'overflow-y': 'auto',
+                        'overflow-x': 'visible',
+                        'padding-bottom': ''
+                });
+
+                contentArea.css({
+                        'height': contentHeight,
+                        'max-height': contentHeight,
+                        'overflow-y': 'auto',
+                        'overflow-x': 'auto'
+                });
+
+                var dialogInstance = contentArea.data('ui-dialog') || contentArea.data('dialog');
+
+                if ( dialogInstance ) {
+                        contentArea.dialog('option', 'position', {
+                                my: 'center top',
+                                at: 'center top+40',
+                                of: positionTarget,
+                                collision: 'fit'
+                        });
+                }
+        });
 }
 
 function redmond_close_this( obj ) {

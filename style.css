@@ -416,24 +416,28 @@ ul.archives-inner-wrapper>li:hover, ul.archives-inner-wrapper>li:focus, ul.archi
 }
 
 div.redmond-dialog-window {
-	z-index: 500;
-	background: var(--redmond-surface-alt);
-	background-color: var(--redmond-surface-alt);
-	min-height: 20px;
-	border: solid 1px;
-	border-top-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-dark);
-	border-bottom-color: var(--redmond-border-dark);
-	display: inline-block;
-	max-width: 100%;
-	max-height: 100%;
-	position: absolute !important;
+        z-index: 500;
+        background: var(--redmond-surface-alt);
+        background-color: var(--redmond-surface-alt);
+        min-height: 20px;
+        border: solid 1px;
+        border-top-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-dark);
+        border-bottom-color: var(--redmond-border-dark);
+        display: inline-block;
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute !important;
+}
+
+div.redmond-dialog-window.redmond-dialog-hidden {
+        display: none !important;
 }
 
 div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dialog-titlebar {
-	min-width: 300px;
-	display: block;
+        min-width: 300px;
+        display: block;
 }
 
 div.redmond-dialog-window>.ui-dialog-content {
