@@ -59,7 +59,7 @@ jQuery(function() {
 });
 
 function checkOpenWindows() {
-        processList = '';
+        var processList = '';
         for( var process in processes ) {
                 if ( ! Object.prototype.hasOwnProperty.call(processes, process) ) {
                         continue;

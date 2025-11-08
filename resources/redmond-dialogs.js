@@ -55,6 +55,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                         'background-repeat': 'no-repeat',
                                         'background-size': 'contain',
                                 });
+                                processes[objid].dialog('option', 'closeText', '');
                                 processes[objid].parent().removeClass('redmond-dialog-hidden');
 
                                 var closeButton = processes[objid].parent().find('button.ui-dialog-titlebar-close');
@@ -68,18 +69,22 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                         });
                                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
                                 jQuery(window).trigger('checkOpenWindows');
-                                processes[objid].parent().on('click',function() {
-                                        find_window_on_top();
-                                });
-				processes[objid].find('iframe').on('click',function() {
-					processes[objid].dialog('moveToTop');
-					find_window_on_top();
-				});
-				processes[objid].find('span.dialog-close-button').css({
-					left: function() {
-						var fullwidth = parseInt( processes[objid].find('span.dialog-close-button').parent().css('width') , 10 );
-						return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
-					}
+                                processes[objid].parent()
+                                        .off('click.redmondFocus')
+                                        .on('click.redmondFocus', function() {
+                                                find_window_on_top();
+                                        });
+                                processes[objid].find('iframe')
+                                        .off('click.redmondIframe')
+                                        .on('click.redmondIframe', function() {
+                                                processes[objid].dialog('moveToTop');
+                                                find_window_on_top();
+                                        });
+                                processes[objid].find('span.dialog-close-button').css({
+                                        left: function() {
+                                                var fullwidth = parseInt( processes[objid].find('span.dialog-close-button').parent().css('width') , 10 );
+                                                return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
+                                        }
                                 });
 
                                 redmond_adjust_dialog_sizes();
@@ -97,6 +102,20 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	else {
 		processes[objid].html('<div class="file-bar"><ul></ul></div>' + content + '</div>');
                 processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
+                processes[objid].dialog('option', {
+                        appendTo: workspaceTarget,
+                        closeOnEscape: false,
+                        draggable: draggable,
+                        resizable: canResize,
+                        position: {
+                                my: 'center top',
+                                at: 'center top+40',
+                                of: workspaceTarget,
+                                collision: 'fit'
+                        },
+                        closeText: ''
+                });
+
                 processes[objid].parent().removeClass('redmond-dialog-hidden');
                 processes[objid].parent().find('.ui-dialog-titlebar>span').css({
                         'background-image': 'url(' + icon + ')',
@@ -113,25 +132,20 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                 redmond_close_this(this);
                         });
                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
-		jQuery(window).trigger('checkOpenWindows');
-		processes[objid].parent().on('click',function() {
-			find_window_on_top();
-		});
-		processes[objid].find('span.dialog-close-button').css({
-			left: function() {
-				var fullwidth = parseInt( processes[objid].find('span.dialog-close-button').parent().css('width') , 10 );
-				return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
-			}
-		});
+                jQuery(window).trigger('checkOpenWindows');
+                processes[objid].parent()
+                        .off('click.redmondFocus')
+                        .on('click.redmondFocus', function() {
+                                find_window_on_top();
+                        });
+                processes[objid].find('span.dialog-close-button').css({
+                        left: function() {
+                                var fullwidth = parseInt( processes[objid].find('span.dialog-close-button').parent().css('width') , 10 );
+                                return ( fullwidth / 2 ) - ( parseInt( processes[objid].find('span.dialog-close-button').css('width') , 10 ) / 2 ) - 10;
+                        }
+                });
                 processes[objid].dialog('open');
                 processes[objid].dialog('moveToTop');
-                processes[objid].dialog('option', 'appendTo', workspaceTarget);
-                processes[objid].dialog('option', 'position', {
-                        my: 'center top',
-                        at: 'center top+40',
-                        of: workspaceTarget,
-                        collision: 'fit'
-                });
                 find_window_on_top();
         }
         redmond_adjust_dialog_sizes();
@@ -180,10 +194,12 @@ function redmond_style_close_button( closeButton ) {
 function redmond_adjust_dialog_sizes() {
         var workspace = jQuery('#desktop-window-area');
         var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
-        var minWindowHeight = 200;
-        var verticalBuffer = 60;
-        var maxWindowHeight = Math.max(viewportHeight - verticalBuffer, Math.min(viewportHeight, minWindowHeight));
-        var targetWindowHeight = Math.min(Math.max(Math.floor(viewportHeight * 0.5), minWindowHeight), maxWindowHeight);
+        if ( ! viewportHeight || viewportHeight <= 0 ) {
+                return;
+        }
+
+        var targetWindowHeight = Math.max(Math.floor(viewportHeight * 0.5), 1);
+
         var positionTarget = workspace.length ? workspace : jQuery(window);
 
         jQuery('div.redmond-dialog-window').each(function() {
@@ -191,32 +207,49 @@ function redmond_adjust_dialog_sizes() {
                 var titleBar = dialogWrapper.children('.ui-dialog-titlebar');
                 var contentArea = dialogWrapper.children('.ui-dialog-content');
                 var titleBarHeight = titleBar.outerHeight(true) || 0;
-                var contentHeight = Math.max(targetWindowHeight - titleBarHeight, 120);
+                var contentHeight = Math.max(targetWindowHeight - titleBarHeight, 0);
 
                 dialogWrapper.css({
                         'height': targetWindowHeight,
-                        'max-height': maxWindowHeight,
-                        'overflow-y': 'auto',
+                        'min-height': targetWindowHeight,
+                        'max-height': targetWindowHeight,
+                        'overflow-y': 'hidden',
                         'overflow-x': 'visible',
                         'padding-bottom': ''
                 });
 
-                contentArea.css({
-                        'height': contentHeight,
-                        'max-height': contentHeight,
+                var contentStyles = {
                         'overflow-y': 'auto',
                         'overflow-x': 'auto'
-                });
+                };
+
+                if ( contentHeight > 0 ) {
+                        contentStyles.height = contentHeight;
+                        contentStyles['max-height'] = contentHeight;
+                } else {
+                        contentStyles.height = '';
+                        contentStyles['max-height'] = '';
+                }
+
+                contentArea.css(contentStyles);
 
                 var dialogInstance = contentArea.data('ui-dialog') || contentArea.data('dialog');
 
                 if ( dialogInstance ) {
-                        contentArea.dialog('option', 'position', {
-                                my: 'center top',
-                                at: 'center top+40',
-                                of: positionTarget,
-                                collision: 'fit'
-                        });
+                        var dialogOptions = {
+                                position: {
+                                        my: 'center top',
+                                        at: 'center top+40',
+                                        of: positionTarget,
+                                        collision: 'fit'
+                                }
+                        };
+
+                        if ( contentHeight > 0 ) {
+                                dialogOptions.height = contentHeight;
+                        }
+
+                        contentArea.dialog('option', dialogOptions);
                 }
         });
 }
