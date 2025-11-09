@@ -207,8 +207,9 @@ function redmond_adjust_dialog_sizes() {
                 return;
         }
 
-        var halfViewport = Math.round(viewportHeight * 0.5);
-        var availableHeight = Math.max(Math.min(halfViewport, viewportHeight - 80), 240);
+        var desiredHeight = Math.max(viewportHeight - 120, 240);
+        var maxViewportHeight = Math.max(viewportHeight - 40, 200);
+        var availableHeight = Math.min(desiredHeight, maxViewportHeight);
         var positionTarget = workspace.length ? workspace : jQuery(window);
 
         jQuery('div.redmond-dialog-window').each(function() {
@@ -231,7 +232,7 @@ function redmond_adjust_dialog_sizes() {
                 });
 
                 var contentStyles = {
-                        'overflow-y': 'auto',
+                        'overflow-y': 'scroll',
                         'overflow-x': 'auto',
                         'min-height': '',
                         'height': '',

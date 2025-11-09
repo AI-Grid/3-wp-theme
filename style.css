@@ -29,19 +29,16 @@ License URI:        http://opensource.org/licenses/MIT
 	outline: none;
 }
 
-html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, label, form, button, input, select, textarea {
-	font-family: Tahoma, Verdana, Segoe, sans-serif;
-	font-size: 11px;
-	font-weight: 500;
-	color: var(--redmond-text);
-}
-
-code {
-	color: var(--redmond-text-muted);
-}
-
-html, body {
+html,
+body {
         height: 100%;
+}
+
+body.dark-mode {
+        font-family: Tahoma, Verdana, Segoe, sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--redmond-text);
         overflow-x: hidden;
         overflow-y: scroll;
         background-color: var(--redmond-bg);
@@ -50,8 +47,16 @@ html, body {
         background-attachment: fixed;
 }
 
-body, body.custom-background {
-	background-color: var(--redmond-bg) !important;
+body.dark-mode.custom-background {
+        background-color: var(--redmond-bg) !important;
+}
+
+body.dark-mode code {
+        color: var(--redmond-text-muted);
+}
+
+body.dark-mode a {
+        color: var(--redmond-text);
 }
 
 #taskbar-outer {
@@ -313,14 +318,29 @@ p.current-user>img {
 	margin-right: 5px;
 }
 
-#start-menu-posts, #start-menu-content-links, #start-menu-archive-link-wrapper {
-	margin-left: -15px;
-	margin-right: -15px;
-	list-style-type: none;
-	padding-left: 0;
+#start-menu-posts,
+#start-menu-content-links,
+#start-menu-archive-link-wrapper {
+        margin-left: -15px;
+        margin-right: -15px;
+        list-style-type: none;
+        padding-left: 0;
 }
 
-#start-menu-posts>a , #start-menu-content-links>a, #start-menu-archive-link-wrapper>li{
+#start-menu-posts {
+        position: relative;
+        overflow-y: auto;
+}
+
+#start-menu-posts.has-nav {
+        overflow-x: visible;
+}
+
+#start-menu-posts>a,
+#start-menu-posts .start-menu-item>a,
+#start-menu-posts .start-menu-submenu>li>a,
+#start-menu-content-links>a,
+#start-menu-archive-link-wrapper>li {
         padding: 5px;
         cursor: pointer;
         display: block;
@@ -339,15 +359,73 @@ p.current-user>img {
 	border-bottom: solid 1px var(--redmond-border-highlight);
 }
 
-#start-menu-posts>a:hover, #start-menu-posts>a:focus, #start-menu-posts>a:active, #start-menu-content-links>a:hover, #start-menu-content-links>a:focus, #start-menu-content-links>a:active , #start-menu-archive-link-wrapper>li:hover, #start-menu-archive-link-wrapper>li:focus, #start-menu-archive-link-wrapper>li:active {
-	background: var(--redmond-accent-dark);
-	color: var(--redmond-text);
-	text-decoration: none;
+#start-menu-posts>a:hover,
+#start-menu-posts>a:focus,
+#start-menu-posts>a:active,
+#start-menu-posts .start-menu-item>a:hover,
+#start-menu-posts .start-menu-item>a:focus,
+#start-menu-posts .start-menu-item>a:active,
+#start-menu-posts .start-menu-submenu>li>a:hover,
+#start-menu-posts .start-menu-submenu>li>a:focus,
+#start-menu-posts .start-menu-submenu>li>a:active,
+#start-menu-content-links>a:hover,
+#start-menu-content-links>a:focus,
+#start-menu-content-links>a:active ,
+#start-menu-archive-link-wrapper>li:hover,
+#start-menu-archive-link-wrapper>li:focus,
+#start-menu-archive-link-wrapper>li:active {
+        background: var(--redmond-accent-dark);
+        color: var(--redmond-text);
+        text-decoration: none;
 }
 
-#start-menu-posts>a>img , #start-menu-content-links>a>img, #start-menu-archive-link-wrapper>li>img {
-	margin-right: 5px;
-	height: 32px;
+#start-menu-posts>a>img,
+#start-menu-posts .start-menu-item>a>img,
+#start-menu-posts .start-menu-submenu>li>a>img,
+#start-menu-content-links>a>img,
+#start-menu-archive-link-wrapper>li>img {
+        margin-right: 5px;
+        height: 32px;
+}
+
+#start-menu-posts .start-menu-item {
+        position: relative;
+}
+
+#start-menu-posts .start-menu-item .start-menu-label {
+        display: inline-block;
+        max-width: 140px;
+        vertical-align: middle;
+}
+
+#start-menu-posts .start-menu-item .submenu-caret {
+        float: right;
+        font-size: 9px;
+        margin-top: 8px;
+}
+
+#start-menu-posts .start-menu-submenu {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        min-width: 180px;
+        background: var(--redmond-surface);
+        border: solid 1px var(--redmond-border-dark);
+        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.45);
+        z-index: 1002;
+}
+
+#start-menu-posts .start-menu-submenu>li>a {
+        white-space: nowrap;
+}
+
+#start-menu-posts .start-menu-item.has-children:hover>.start-menu-submenu,
+#start-menu-posts .start-menu-item.has-children:focus-within>.start-menu-submenu {
+        display: block;
 }
 
 #start-menu-archives-link {
@@ -456,7 +534,7 @@ div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dial
 }
 
 div.redmond-dialog-window>.ui-dialog-content {
-	overflow-y: auto;
+        overflow-y: scroll;
 }
 
 div.redmond-dialog-window>.ui-dialog-content>article {
