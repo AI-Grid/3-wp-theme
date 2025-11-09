@@ -67,25 +67,40 @@ $current_user = wp_get_current_user();
 					<div class="row">
 						<div class="col-xs-6">
 							<div id="start-menu-posts">
-						<?php
-							$latest = wp_get_recent_posts( array(
-								'numberposts' => 8,
-								'post_status' => 'publish',
-								'suppress_filters' => false,
-							) , OBJECT );
-							foreach ( $latest as $post ) {
-								?>
-									<a href="<?php print esc_url( get_permalink( $post->ID ) ); ?>" class="post-link" data-post-id="<?php print intval( $post->ID ); ?>" title="<?php print esc_html( $post->post_title ); ?>">
-										<img src="<?php print esc_url( redmond_get_post_icon( $post->ID ) ); ?>" />
-										<?php print esc_html( substr( $post->post_title, 0, 20 ) ); ?>
-										<?php if ( strlen( esc_html( $post->post_title ) ) > 20 ) { print '...'; } ?>
-									</a>
-								<?php
-							}
-						?>
-							</div>
-						</div>
-						<div class="col-xs-6">
+                                                <?php
+                                                        $recent_items = get_posts( array(
+                                                                'post_type' => array( 'post', 'page' ),
+                                                                'post_status' => 'publish',
+                                                                'posts_per_page' => 8,
+                                                                'orderby' => 'date',
+                                                                'order' => 'DESC',
+                                                                'suppress_filters' => false,
+                                                        ) );
+
+                                                        if ( empty( $recent_items ) ) {
+                                                                ?>
+                                                                <span class="start-menu-empty">
+                                                                        <?php esc_html_e( 'No recent content available yet.', RTEXTDOMAIN ); ?>
+                                                                </span>
+                                                                <?php
+                                                        }
+                                                        else {
+                                                                foreach ( $recent_items as $recent_post ) {
+                                                                        $recent_title = get_the_title( $recent_post );
+                                                                        $recent_label = wp_html_excerpt( $recent_title, 20, '...' );
+                                                                        ?>
+                                                                        <a href="<?php print esc_url( get_permalink( $recent_post ) ); ?>" class="post-link" data-post-id="<?php print intval( $recent_post->ID ); ?>" title="<?php print esc_attr( $recent_title ); ?>">
+                                                                                <img src="<?php print esc_url( redmond_get_post_icon( $recent_post->ID ) ); ?>" />
+                                                                                <?php print esc_html( $recent_label ); ?>
+                                                                        </a>
+                                                                        <?php
+                                                                }
+                                                                wp_reset_postdata();
+                                                        }
+                                                ?>
+                                                        </div>
+                                                </div>
+                                                <div class="col-xs-6">
 							<div id="start-menu-content-links">
 								<a id="my-documents-start-menu-link">
 									<img src="<?php print esc_url( get_theme_mod( 'redmond_default_documents_icon' , REDMONDURI . '/resources/docs.ico' ) ); ?>" />

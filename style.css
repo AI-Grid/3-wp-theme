@@ -321,10 +321,16 @@ p.current-user>img {
 }
 
 #start-menu-posts>a , #start-menu-content-links>a, #start-menu-archive-link-wrapper>li{
-	padding: 5px;
-	cursor: pointer;
-	display: block;
-	color: var(--redmond-text);
+        padding: 5px;
+        cursor: pointer;
+        display: block;
+        color: var(--redmond-text);
+}
+
+.start-menu-empty {
+        display: block;
+        padding: 10px;
+        color: var(--redmond-text-muted);
 }
 
 #start-menu-content-links>a.seperator , #start-menu-archive-link-wrapper>li.seperator{
