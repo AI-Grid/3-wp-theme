@@ -35,50 +35,53 @@ jQuery(function() {
 	if( redmond_terms.playLoginSounds ) {
 		sounds.login.play();
 	}
-	for( var process in processes ) {
-		processes[process].dialog('moveToTop');
-		find_window_on_top();
-		break;
-	}
-	jQuery(window).on('resize',function() {
-		jQuery("div.redmond-dialog-window").each(function() {
-		var obj = this;
-                jQuery(this).css({
-                        'padding-bottom': function() {
-                                if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-                                        return 20;
-                                }
-                                else {
-                                        0;
-                                }
-                        },
-                        height: function() {
-                                if ( jQuery(obj).height() > ( jQuery(window).height() * 0.9 ) ) {
-                                        return ( jQuery(window).height() * 0.9 )
-                                }
-                        },
-                        'overflow': 'visible',
-                });
-        });
+        for( var process in processes ) {
+                if ( ! Object.prototype.hasOwnProperty.call(processes, process) ) {
+                        continue;
+                }
+
+                if ( typeof processes[process].dialog === 'function' && processes[process].dialog('isOpen') ) {
+                        processes[process].dialog('moveToTop');
+                        find_window_on_top();
+                        break;
+                }
+        }
+
+        if ( typeof redmond_adjust_dialog_sizes === 'function' ) {
+                redmond_adjust_dialog_sizes();
+        }
+
+        jQuery(window).on('resize',function() {
+                if ( typeof redmond_adjust_dialog_sizes === 'function' ) {
+                        redmond_adjust_dialog_sizes();
+                }
         });
 });
 
 function checkOpenWindows() {
-	processList = '';
-	for( var process in processes ) {
-		if( parseInt(processes[process].parent().css('top'),10) >= 0 ) {
-			processes[process].currentTop = parseInt(processes[process].parent().css('top'),10);
-		}
-		else {
-			processes[process].parent().css('top',processes[process].currentTop);
-		}
-		processList += '<li onclick="processes[\'' +process+ '\'].dialog(\'moveToTop\')" id="' +process+ '_taskbar">';
-		processList += '<span class="task-icon"';
-		processList += ' style="' + processes[process].parent().find('.ui-dialog-title').attr('style') + '"';
-		processList += '></span>';
-		processList += processes[process].parent().find('.ui-dialog-title').html().substring(0,20) + '</li>' + "\r\n";
-	}
-	jQuery("#open-processes").html( processList );
+        var processList = '';
+        for( var process in processes ) {
+                if ( ! Object.prototype.hasOwnProperty.call(processes, process) ) {
+                        continue;
+                }
+
+                if ( typeof processes[process].dialog !== 'function' || ! processes[process].dialog('isOpen') ) {
+                        continue;
+                }
+
+                if( parseInt(processes[process].parent().css('top'),10) >= 0 ) {
+                        processes[process].currentTop = parseInt(processes[process].parent().css('top'),10);
+                }
+                else {
+                        processes[process].parent().css('top',processes[process].currentTop);
+                }
+                processList += '<li onclick="processes[\'' +process+ '\'].dialog(\'moveToTop\')" id="' +process+ '_taskbar">';
+                processList += '<span class="task-icon"';
+                processList += ' style="' + processes[process].parent().find('.ui-dialog-title').attr('style') + '"';
+                processList += '></span>';
+                processList += processes[process].parent().find('.ui-dialog-title').html().substring(0,20) + '</li>' + "\r\n";
+        }
+        jQuery("#open-processes").html( processList );
 	jQuery("#open-processes>li").on('click',function() {
 		find_window_on_top();
 	});
@@ -87,20 +90,34 @@ function checkOpenWindows() {
 
 function find_window_on_top() {
 	var top;
-	var hightestZ = 0;
-	for( var process in processes ) {
-		if( processes[process].zIndex() > hightestZ ) {
-			top = process;
-			hightestZ = processes[process].zIndex();
-		}
-		var currTop = processes[process].parent().offset().top;
-		if( currTop < 0 ) {
-			processes[process].parent().offset({top: 100, left: processes[process].parent().offset().left});
-		}
-	}
-	var taskbar = jQuery("#" + top + '_taskbar');
-	jQuery("#open-processes>li").removeClass('active');
-	taskbar.addClass('active');
+        var hightestZ = -Infinity;
+        for( var process in processes ) {
+                if ( ! Object.prototype.hasOwnProperty.call(processes, process) ) {
+                        continue;
+                }
+
+                if ( typeof processes[process].dialog !== 'function' || ! processes[process].dialog('isOpen') ) {
+                        continue;
+                }
+
+                if( processes[process].zIndex() > hightestZ ) {
+                        top = process;
+                        hightestZ = processes[process].zIndex();
+                }
+                var currTop = processes[process].parent().offset().top;
+                if( currTop < 0 ) {
+                        processes[process].parent().offset({top: 100, left: processes[process].parent().offset().left});
+                }
+        }
+
+        jQuery("#open-processes>li").removeClass('active');
+
+        if ( typeof top === 'undefined' ) {
+                return;
+        }
+
+        var taskbar = jQuery("#" + top + '_taskbar');
+        taskbar.addClass('active');
 }
 
 function startSystemClock() {
@@ -190,10 +207,13 @@ function open_this_as_redmond_dialog( obj ) {
 		open_post_as_dialog( parseInt( jQuery(obj).attr('data-post-id') , 10 ) );
 	}
 	else {
-		var html = '<iframe src="' + jQuery(obj).attr('href') + '"></iframe>';
-		var process = new Date().getTime();
-		redmond_window( process , jQuery(obj).attr('title') , html , false , true , true , redmond_terms.externalPageIcon );
-		processes[process].css({'overflow-y':'hidden'});
+                var html = '<iframe src="' + jQuery(obj).attr('href') + '"></iframe>';
+                var process = new Date().getTime();
+                redmond_window( process , jQuery(obj).attr('title') , html , false , true , true , redmond_terms.externalPageIcon );
+                processes[process].css({
+                        'overflow-y': 'scroll',
+                        'overflow-x': 'auto'
+                });
 	}
 }
 

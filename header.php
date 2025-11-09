@@ -1,8 +1,9 @@
 <?php
 defined( 'ABSPATH' ) || die( 'Sorry, but you cannot access this page directly.' );
 global $wpdb;
-$quick_launch  = redmond_get_menu_as_array( 'quick_launch' );
-$current_user = wp_get_current_user();
+$quick_launch      = redmond_get_menu_as_array( 'quick_launch' );
+$start_menu_items  = redmond_get_menu_as_array( 'start' );
+$current_user      = wp_get_current_user();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -66,23 +67,84 @@ $current_user = wp_get_current_user();
 				<div id="start-menu-internal">
 					<div class="row">
 						<div class="col-xs-6">
-							<div id="start-menu-posts">
-						<?php
-							$latest = wp_get_recent_posts( array(
-								'numberposts' => 8,
-								'post_status' => 'publish',
-								'suppress_filters' => false,
-							) , OBJECT );
-							foreach ( $latest as $post ) {
+						<div id="start-menu-posts"<?php if ( ! empty( $start_menu_items ) ) { ?> class="has-nav"<?php } ?>>
+					<?php
+					if ( ! empty( $start_menu_items ) ) {
+						foreach ( $start_menu_items as $menu_item ) {
+							$item_title = wp_strip_all_tags( $menu_item->title );
+							$item_label = wp_html_excerpt( $item_title, 24, '...' );
+							$item_icon  = ( 'custom' === $menu_item->object ) ? get_theme_mod( 'redmond_external_page_icon', REDMONDURI . '/resources/external.ico' ) : redmond_get_post_icon( $menu_item->object_id );
+							$has_children = ! empty( $menu_item->subs );
+							$link_classes = array( 'start-menu-link' );
+
+							if ( 'custom' !== $menu_item->object ) {
+								$link_classes[] = 'post-link';
+							}
+
+							?>
+							<div class="start-menu-item<?php echo $has_children ? ' has-children' : ''; ?>">
+								<a href="<?php print esc_url( $menu_item->url ); ?>" class="<?php print esc_attr( implode( ' ', $link_classes ) ); ?>" <?php if ( 'custom' !== $menu_item->object ) { ?>data-post-id="<?php print intval( $menu_item->object_id ); ?>"<?php } ?> title="<?php print esc_attr( $item_title ); ?>">
+									<img src="<?php print esc_url( $item_icon ); ?>" alt="" />
+									<span class="start-menu-label"><?php print esc_html( $item_label ); ?></span>
+									<?php if ( $has_children ) : ?>
+										<span class="submenu-caret" aria-hidden="true">&#9656;</span>
+									<?php endif; ?>
+								</a>
+								<?php if ( $has_children ) : ?>
+								<ul class="start-menu-submenu">
+								<?php foreach ( $menu_item->subs as $sub_item ) :
+									$sub_title = wp_strip_all_tags( $sub_item->title );
+									$sub_label = wp_html_excerpt( $sub_title, 24, '...' );
+									$sub_icon  = ( 'custom' === $sub_item->object ) ? get_theme_mod( 'redmond_external_page_icon', REDMONDURI . '/resources/external.ico' ) : redmond_get_post_icon( $sub_item->object_id );
+									$sub_classes = array( 'start-menu-link' );
+									if ( 'custom' !== $sub_item->object ) {
+										$sub_classes[] = 'post-link';
+									}
 								?>
-									<a href="<?php print esc_url( get_permalink( $post->ID ) ); ?>" class="post-link" data-post-id="<?php print intval( $post->ID ); ?>" title="<?php print esc_html( $post->post_title ); ?>">
-										<img src="<?php print esc_url( redmond_get_post_icon( $post->ID ) ); ?>" />
-										<?php print esc_html( substr( $post->post_title, 0, 20 ) ); ?>
-										<?php if ( strlen( esc_html( $post->post_title ) ) > 20 ) { print '...'; } ?>
-									</a>
+									<li>
+										<a href="<?php print esc_url( $sub_item->url ); ?>" class="<?php print esc_attr( implode( ' ', $sub_classes ) ); ?>" <?php if ( 'custom' !== $sub_item->object ) { ?>data-post-id="<?php print intval( $sub_item->object_id ); ?>"<?php } ?> title="<?php print esc_attr( $sub_title ); ?>">
+											<img src="<?php print esc_url( $sub_icon ); ?>" alt="" />
+											<span class="start-menu-label"><?php print esc_html( $sub_label ); ?></span>
+										</a>
+									</li>
+								<?php endforeach; ?>
+								</ul>
+								<?php endif; ?>
+							</div>
+							<?php
+						}
+					} else {
+						$recent_items = get_posts( array(
+							'post_type'        => array( 'post', 'page' ),
+							'post_status'      => 'publish',
+							'posts_per_page'   => 8,
+							'orderby'          => 'date',
+							'order'            => 'DESC',
+							'suppress_filters' => false,
+						) );
+
+						if ( empty( $recent_items ) ) {
+							?>
+							<span class="start-menu-empty">
+								<?php esc_html_e( 'No recent content available yet.', RTEXTDOMAIN ); ?>
+							</span>
+							<?php
+						}
+						else {
+							foreach ( $recent_items as $recent_post ) {
+								$recent_title = get_the_title( $recent_post );
+								$recent_label = wp_html_excerpt( $recent_title, 20, '...' );
+								?>
+								<a href="<?php print esc_url( get_permalink( $recent_post ) ); ?>" class="post-link" data-post-id="<?php print intval( $recent_post->ID ); ?>" title="<?php print esc_attr( $recent_title ); ?>">
+									<img src="<?php print esc_url( redmond_get_post_icon( $recent_post->ID ) ); ?>" alt="" />
+									<?php print esc_html( $recent_label ); ?>
+								</a>
 								<?php
 							}
-						?>
+							wp_reset_postdata();
+						}
+					}
+					?>
 							</div>
 						</div>
 						<div class="col-xs-6">
@@ -200,50 +262,12 @@ if ( current_user_can( 'publish_posts' ) ) {
 										</ul>
 									</div>
 									<?php
-									print '</li>' . "\r\n";
-								}
-								$start_menu = redmond_get_menu_as_array( 'start' );
-								foreach ( $start_menu as $ID => $item ) {
-									$item_title = wp_strip_all_tags( $item->title );
-									$item_label = wp_html_excerpt( $item_title, 20, '...' );
-									$item_icon  = ( 'custom' === $item->object ) ? get_theme_mod( 'redmond_external_page_icon', REDMONDURI . '/resources/external.ico' ) : redmond_get_post_icon( $item->object_id );
-									$has_children = ! empty( $item->subs );
-								?>
-									<li>
-										<?php if ( ! $has_children ) : ?>
-										<a href="<?php print esc_url( $item->url ); ?>"<?php if ( 'custom' !== $item->object ) : ?> class="post-link" data-post-id="<?php print intval( $item->object_id ); ?>"<?php endif; ?> title="<?php print esc_attr( $item_title ); ?>">
-										<?php endif; ?>
-											<img src="<?php print esc_url( $item_icon ); ?>" />
-											<?php print esc_html( $item_label ); ?>
-										<?php if ( $has_children ) : ?>
-											<span style="margin-left: 20px;" class="glyphicon glyphicon-play pull-right"></span>
-											<div class="archives-outer-wrapper">
-												<ul class="archives-inner-wrapper">
-												<?php foreach ( $item->subs as $ID => $i ) :
-													$sub_title = wp_strip_all_tags( $i->title );
-													$sub_label = wp_html_excerpt( $sub_title, 20, '...' );
-													$sub_icon  = ( 'custom' === $i->object ) ? get_theme_mod( 'redmond_external_page_icon', REDMONDURI . '/resources/external.ico' ) : redmond_get_post_icon( $i->object_id );
-												?>
-												<li>
-													<a href="<?php print esc_url( $i->url ); ?>"<?php if ( 'custom' !== $i->object ) : ?> class="post-link" data-post-id="<?php print intval( $i->object_id ); ?>"<?php endif; ?> title="<?php print esc_attr( $sub_title ); ?>">
-														<img src="<?php print esc_url( $sub_icon ); ?>" />
-														<?php print esc_html( $sub_label ); ?>
-													</a>
-												</li>
-												<?php endforeach; ?>
-												</ul>
-											</div>
-										<?php endif; ?>
-										<?php if ( ! $has_children ) : ?>
-										</a>
-										<?php endif; ?>
-									</li>
-									<?php
+										print '</li>' . "\r\n";
 									}
-								?>
-							</ul>
-						</div>
-					</li>
+									?>
+								</ul>
+							</div>
+						</li>
 				</ul>
 				<div id="start-menu-login-bar-outer">
 					<div id="start-menu-login-bar-inner">
@@ -277,18 +301,18 @@ if ( current_user_can( 'publish_posts' ) ) {
 				</div>
 			</div>
 		</div>
-               <div id="desktop-area">
-                       <div id="desktop-icons">
-                               <?php
-                               redmond_generate_folder_shortcuts_from_menu( 'desktop' );
-                               ?>
-                       </div>
-                       <div id="desktop-window-area">
-                               <div id="modal-holder"></div>
-                       </div>
-               </div>
-               <?php
-               //print('<pre>');
-               //print_r( wp_kses_allowed_html( 'post' ) );
-               //print('</pre>');
-               ?>
+	       <div id="desktop-area">
+		       <div id="desktop-icons">
+			       <?php
+			       redmond_generate_folder_shortcuts_from_menu( 'desktop' );
+			       ?>
+		       </div>
+		       <div id="desktop-window-area">
+			       <div id="modal-holder"></div>
+		       </div>
+	       </div>
+	       <?php
+	       //print('<pre>');
+	       //print_r( wp_kses_allowed_html( 'post' ) );
+	       //print('</pre>');
+	       ?>
