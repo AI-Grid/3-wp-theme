@@ -1,9 +1,9 @@
 /*
-Theme Name:         Redmond Inspired
+Theme Name:         Longhorn Inspired
 Theme URI:          https://jak.guru
-Description:        WordPress theme inspired by classic Windows Operating Systems
+Description:        WordPress theme inspired by the Windows Longhorn aesthetic
 Version:            1.0.0
-Author:             Jak Gurudiv.file-bar
+Author:             Jak Guru
 Author URI:         https://jak.guru
 
 License:            MIT License
@@ -11,18 +11,18 @@ License URI:        http://opensource.org/licenses/MIT
 */
 
 :root {
-	--redmond-bg: #0b1120;
-	--redmond-surface: #111827;
-	--redmond-surface-alt: #1f2937;
-	--redmond-surface-soft: #182133;
-	--redmond-border-light: #475569;
-	--redmond-border-highlight: #64748b;
-	--redmond-border-dark: #050b18;
-	--redmond-border-darker: #030712;
-	--redmond-text: #e2e8f0;
-	--redmond-text-muted: #cbd5f5;
-	--redmond-accent: #60a5fa;
-	--redmond-accent-dark: #1e3a8a;
+	--redmond-bg: #050607;
+	--redmond-surface: #0f1014;
+	--redmond-surface-alt: #15161d;
+	--redmond-surface-soft: #1b1d26;
+	--redmond-border-light: #ff5757;
+	--redmond-border-highlight: #ff6f6f;
+	--redmond-border-dark: #09090f;
+	--redmond-border-darker: #050508;
+	--redmond-text: #f5f5f7;
+	--redmond-text-muted: #ffb6c1;
+	--redmond-accent: #ff4d4f;
+	--redmond-accent-dark: #b1001d;
 }
 
 :focus {
@@ -41,10 +41,13 @@ code {
 }
 
 html, body {
-	height: 100%;
-	overflow-x: hidden;
-	overflow-y: hidden;
-	background: var(--redmond-bg);
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        background-color: var(--redmond-bg);
+        background-image: radial-gradient(circle at 15% 20%, rgba(255,77,79,0.35), rgba(5,6,7,0.95) 55%);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
 }
 
 body, body.custom-background {
@@ -52,26 +55,28 @@ body, body.custom-background {
 }
 
 #taskbar-outer {
-	display: block;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	background: var(--redmond-surface-alt);
-	background-color: var(--redmond-surface-alt);
-	border-top: solid 1px var(--redmond-border-light);
-	border-bottom: solid 1px var(--redmond-border-dark);
-	height: 30px;
-	width: 100%;
-	border-radius: 0;
-	z-index: 10000;
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(180deg, rgba(24,24,28,0.95) 0%, rgba(8,8,10,0.98) 55%, rgba(255,77,79,0.18) 100%);
+        background-color: var(--redmond-surface-alt);
+        border-top: solid 1px var(--redmond-border-light);
+        border-bottom: solid 1px var(--redmond-border-dark);
+        height: 30px;
+        width: 100%;
+        border-radius: 0;
+        z-index: 10000;
+        box-shadow: 0 -4px 12px rgba(255,77,79,0.25);
 }
 
 #taskbar-inner {
-	border-top: solid 1px var(--redmond-border-highlight);
-	width: 100%;
-	height: 28px;
-	padding: 2px;
-	border-radius: 0;
+        border-top: solid 1px var(--redmond-border-highlight);
+        width: 100%;
+        height: 28px;
+        padding: 2px;
+        border-radius: 0;
+        background: linear-gradient(90deg, rgba(12,12,16,0.85) 0%, rgba(255,77,79,0.28) 100%);
 }
 
 span.button-outer {
@@ -93,36 +98,36 @@ span.button-outer:active, span.button-outer.activated {
 }
 
 button.system-button {
-	min-width: 50px;
-	height: 22px;
-	border: solid 1px;
-	padding:0;
-	padding-left: 5px;
-	padding-right: 5px;
-	border-top-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-dark);
-	border-bottom-color: var(--redmond-border-dark);
-	float: left;
-	background: var(--redmond-surface);
-	background-color: var(--redmond-surface);
-	color: var(--redmond-text);
+        min-width: 50px;
+        height: 22px;
+        border: solid 1px;
+        padding:0;
+        padding-left: 5px;
+        padding-right: 5px;
+        border-top-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-dark);
+        border-bottom-color: var(--redmond-border-dark);
+        float: left;
+        background: linear-gradient(180deg, rgba(33,33,41,0.95) 0%, rgba(12,12,18,0.95) 100%);
+        background-color: var(--redmond-surface);
+        color: var(--redmond-text);
 }
 
 input.system-field {
-	width: 100%;
-	height: 22px;
-	border: solid 1px;
-	border-top: solid 2px;
-	border-left: solid 2px;
-	border-bottom-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-dark);
-	border-top-color: var(--redmond-border-dark);
-	background: var(--redmond-surface);
-	color: var(--redmond-text);
-	padding-left: 2px;
-	padding-right: 2px;
+        width: 100%;
+        height: 22px;
+        border: solid 1px;
+        border-top: solid 2px;
+        border-left: solid 2px;
+        border-bottom-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-dark);
+        border-top-color: var(--redmond-border-dark);
+        background: linear-gradient(180deg, rgba(25,25,33,0.95) 0%, rgba(10,10,16,0.95) 100%);
+        color: var(--redmond-text);
+        padding-left: 2px;
+        padding-right: 2px;
 }
 
 span.button-outer.activated>button.system-button:active, span.button-outer.activated>button.system-button {
@@ -148,20 +153,22 @@ button.system-button>span {
 }
 
 #taskbar-clock {
-	float: right;
-	display: inline-block;
-	border: solid 1px;
-	border-bottom-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-highlight);
-	border-top-color: var(--redmond-border-dark);
-	border-left-color: var(--redmond-border-dark);
-	height: 23px;
-	margin-right: 5px;
-	line-height: 24px;
-	text-align: right;
-	padding-left: 5px;
-	padding-right: 5px;
-	background: var(--redmond-surface);
+        float: right;
+        display: inline-block;
+        border: solid 1px;
+        border-bottom-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-highlight);
+        border-top-color: var(--redmond-border-dark);
+        border-left-color: var(--redmond-border-dark);
+        height: 23px;
+        margin-right: 5px;
+        line-height: 24px;
+        text-align: right;
+        padding-left: 5px;
+        padding-right: 5px;
+        background: linear-gradient(180deg, rgba(33,33,41,0.95) 0%, rgba(12,12,18,0.95) 100%);
+        color: var(--redmond-text);
+        text-shadow: 0 0 6px rgba(255,77,79,0.45);
 }
 
 #desktop-area {
@@ -194,17 +201,17 @@ button.system-button>span {
 }
 
 #start-menu-wrapper {
-	position: fixed;
-	bottom: 30px;
-	left: 0;
-	max-width: 100%;
-	width: 382px;
-	height: 426px;
-	max-height: 100%;
-	display: none;
-	background: var(--redmond-surface-alt);
-	background-color: var(--redmond-surface-alt);
-	border: solid 1px;
+        position: fixed;
+        bottom: 30px;
+        left: 0;
+        max-width: 100%;
+        width: 382px;
+        height: 426px;
+        max-height: 100%;
+        display: none;
+        background: linear-gradient(180deg, rgba(22,22,30,0.98) 0%, rgba(10,10,16,0.98) 100%);
+        background-color: var(--redmond-surface-alt);
+        border: solid 1px;
 	border-top-color: var(--redmond-border-highlight);
 	border-left-color: var(--redmond-border-highlight);
 	border-right-color: var(--redmond-border-dark);
@@ -213,32 +220,33 @@ button.system-button>span {
 }
 
 #start-menu-inner {
-	border-top: solid 1px var(--redmond-border-highlight);
-	width: 100%;
-	height: 100%;
-	background: var(--redmond-surface);
-	float: left;
+        border-top: solid 1px var(--redmond-border-highlight);
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(15,15,20,0.98) 0%, rgba(255,77,79,0.15) 100%);
+        float: left;
 }
 
 #start-menu-user-bar {
-	position: absolute;
-	top: 0;
-	height: 40px;
-	line-height: 40px;
-	width: 100%;
-	background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(37,99,235,0.75) 100%);
-	z-index: 10000;
+        position: absolute;
+        top: 0;
+        height: 40px;
+        line-height: 40px;
+        width: 100%;
+        background: linear-gradient(90deg, rgba(12,12,16,0.95) 0%, rgba(255,77,79,0.75) 100%);
+        z-index: 10000;
 }
 
 p.current-user {
-	line-height: 38px;
-	font-size: 26px;
-	color: #FFF;
-	margin: 0;
-	text-align: left;
-	margin-right: 5px;
-	margin-left: 10px;
-	font-style: italic;
+        line-height: 38px;
+        font-size: 26px;
+        color: #FFF;
+        margin: 0;
+        text-align: left;
+        margin-right: 5px;
+        margin-left: 10px;
+        font-style: italic;
+        text-shadow: 0 0 8px rgba(255,77,79,0.6);
 }
 
 p.current-user>img {
@@ -264,22 +272,23 @@ p.current-user>img {
 }
 
 #start-menu-login-bar-outer {
-	position: absolute;
-	bottom: 0;
-	display: block;
-	width: 100%;
-	height: 40px;
-	border-top: solid 1px var(--redmond-border-dark);
-	background: var(--redmond-surface-alt);
-	background-color: var(--redmond-surface-alt);
-	z-index: 1000;
+        position: absolute;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        height: 40px;
+        border-top: solid 1px var(--redmond-border-dark);
+        background: linear-gradient(180deg, rgba(24,24,32,0.95) 0%, rgba(255,77,79,0.22) 100%);
+        background-color: var(--redmond-surface-alt);
+        z-index: 1000;
 }
 
 #start-menu-login-bar-inner {
-	display: block;
-	float: left;
-	width: 100%;
-	border-top: solid 1px var(--redmond-border-highlight);
+        display: block;
+        float: left;
+        width: 100%;
+        border-top: solid 1px var(--redmond-border-highlight);
+        background: linear-gradient(90deg, rgba(12,12,16,0.85) 0%, rgba(255,77,79,0.18) 100%);
 }
 
 .start-menu-bottom-bar-command {
@@ -416,24 +425,28 @@ ul.archives-inner-wrapper>li:hover, ul.archives-inner-wrapper>li:focus, ul.archi
 }
 
 div.redmond-dialog-window {
-	z-index: 500;
-	background: var(--redmond-surface-alt);
-	background-color: var(--redmond-surface-alt);
-	min-height: 20px;
-	border: solid 1px;
-	border-top-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-dark);
-	border-bottom-color: var(--redmond-border-dark);
-	display: inline-block;
-	max-width: 100%;
-	max-height: 100%;
-	position: absolute !important;
+        z-index: 500;
+        background: linear-gradient(180deg, rgba(25,25,34,0.98) 0%, rgba(10,10,14,0.98) 100%);
+        background-color: var(--redmond-surface-alt);
+        min-height: 20px;
+        border: solid 1px;
+        border-top-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-dark);
+        border-bottom-color: var(--redmond-border-dark);
+        display: inline-block;
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute !important;
+}
+
+div.redmond-dialog-window.redmond-dialog-hidden {
+        display: none !important;
 }
 
 div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dialog-titlebar {
-	min-width: 300px;
-	display: block;
+        min-width: 300px;
+        display: block;
 }
 
 div.redmond-dialog-window>.ui-dialog-content {
@@ -448,11 +461,11 @@ div.redmond-dialog-window>.ui-dialog-content>article {
 }
 
 div.redmond-dialog-window>.ui-dialog-titlebar {
-	background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(96,165,250,0.75) 100%);
-	color: var(--redmond-text);
-	height: auto;
-	cursor: move;
-	padding: 2px;
+        background: linear-gradient(90deg, rgba(12,12,16,0.95) 0%, rgba(255,77,79,0.75) 100%);
+        color: var(--redmond-text);
+        height: auto;
+        cursor: move;
+        padding: 2px;
 }
 
 div.redmond-dialog-window>.ui-dialog-titlebar>span {
@@ -464,33 +477,57 @@ div.redmond-dialog-window>.ui-dialog-titlebar>span {
 }
 
 div.redmond-dialog-window>.ui-dialog-titlebar>button {
-	position: absolute;
-	top: 1px;
-	right: 1px;
-	background: var(--redmond-surface);
-	background-color: var(--redmond-surface);
-	min-height: 20px;
-	border: solid 1px;
-	border-top-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-dark);
-	border-bottom-color: var(--redmond-border-dark);
-	display: inline-block;
-	padding: 0;
-	line-height: 0;
-	height: auto;
-	width: 20px;
-	font-weight: 700;
-	color: var(--redmond-text);
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        background: linear-gradient(180deg, rgba(36,36,44,0.95) 0%, rgba(14,14,20,0.95) 100%);
+        background-color: var(--redmond-surface);
+        min-height: 20px;
+        border: solid 1px;
+        border-top-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-dark);
+        border-bottom-color: var(--redmond-border-dark);
+        display: inline-block;
+        padding: 0;
+        line-height: 1;
+        height: auto;
+        width: 22px;
+        font-weight: 700;
+        color: var(--redmond-text);
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        padding: 0;
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button .redmond-close-text {
+        line-height: 1;
+        font-size: 16px;
+        display: block;
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button:focus-visible {
+        outline: 2px solid var(--redmond-accent);
+        outline-offset: 1px;
+}
+
+div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button:hover {
+        background: linear-gradient(180deg, rgba(255,77,79,0.35) 0%, rgba(36,36,44,0.95) 100%);
+        color: var(--redmond-text);
 }
 
 div.redmond-dialog-window>div.ui-dialog-content {
-	background: var(--redmond-surface);
-	overflow-y: auto;
-	border: solid 1px;
-	border-top-color: var(--redmond-border-highlight);
-	border-left-color: var(--redmond-border-highlight);
-	border-right-color: var(--redmond-border-dark);
+        background: linear-gradient(180deg, rgba(20,20,28,0.98) 0%, rgba(12,12,16,0.98) 100%);
+        overflow-y: auto;
+        border: solid 1px;
+        border-top-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-dark);
 	border-bottom-color: var(--redmond-border-dark);
 	min-height: 50px !important;
 	position: relative;
@@ -529,13 +566,13 @@ div.redmond-dialog-window>div.ui-dialog-content {
 }
 
 div.file-bar {
-	display: block;
-	width: 100%;
-	min-height: 10px;
-	background: var(--redmond-surface-alt);
-	background-color: var(--redmond-surface-alt);
-	position: absolute;
-	border-right: solid 1px var(--redmond-border-dark);
+        display: block;
+        width: 100%;
+        min-height: 10px;
+        background: linear-gradient(180deg, rgba(32,32,42,0.98) 0%, rgba(12,12,18,0.98) 100%);
+        background-color: var(--redmond-surface-alt);
+        position: absolute;
+        border-right: solid 1px var(--redmond-border-dark);
 }
 
 div.file-bar>ul {
@@ -559,15 +596,15 @@ div.file-bar>ul>li:hover, div.file-bar>ul>li:focus, div.file-bar>ul>li:active , 
 }
 
 div.file-bar>ul>li>ul {
-	display: none;
-	position: absolute;
-	top: 25px;
-	left: 1px;
-	min-height: 10px;
-	background: var(--redmond-surface);
-	background-color: var(--redmond-surface);
-	color: var(--redmond-text);
-	list-style-type: none;
+        display: none;
+        position: absolute;
+        top: 25px;
+        left: 1px;
+        min-height: 10px;
+        background: linear-gradient(180deg, rgba(25,25,33,0.98) 0%, rgba(8,8,12,0.98) 100%);
+        background-color: var(--redmond-surface);
+        color: var(--redmond-text);
+        list-style-type: none;
 	min-width: 100px;
 	padding-left: 0;
 	border: solid 1px;
