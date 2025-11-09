@@ -62,7 +62,9 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                                 redmond_style_close_button(closeButton);
                                 closeButton
                                         .off('click.redmondClose')
-                                        .on('click.redmondClose', function(){
+                                        .on('click.redmondClose', function(event){
+                                                event.preventDefault();
+                                                event.stopPropagation();
                                                 redmond_close_this(this);
                                         });
                                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
@@ -127,7 +129,9 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 redmond_style_close_button(closeButton);
                 closeButton
                         .off('click.redmondClose')
-                        .on('click.redmondClose', function(){
+                        .on('click.redmondClose', function(event){
+                                event.preventDefault();
+                                event.stopPropagation();
                                 redmond_close_this(this);
                         });
                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
@@ -198,8 +202,7 @@ function redmond_adjust_dialog_sizes() {
                 return;
         }
 
-        var targetWindowHeight = Math.max(Math.floor(viewportHeight * 0.5), 1);
-
+        var availableHeight = Math.max(viewportHeight - 120, 240);
         var positionTarget = workspace.length ? workspace : jQuery(window);
 
         jQuery('div.redmond-dialog-window').each(function() {
@@ -208,12 +211,12 @@ function redmond_adjust_dialog_sizes() {
                 var titleBar = dialogWrapper.children('.ui-dialog-titlebar');
                 var contentArea = dialogWrapper.children('.ui-dialog-content');
                 var titleBarHeight = titleBar.outerHeight(true) || 0;
-                var contentHeight = Math.max(targetWindowHeight - titleBarHeight, 0);
+                var maxContentHeight = Math.max(availableHeight - titleBarHeight, 160);
 
                 dialogWrapper.css({
                         'height': '',
                         'min-height': '',
-                        'max-height': shouldCapHeight && targetWindowHeight > 0 ? targetWindowHeight : '',
+                        'max-height': shouldCapHeight ? availableHeight : '',
                         'overflow-y': shouldCapHeight ? 'hidden' : 'visible',
                         'overflow-x': 'visible',
                         'padding-bottom': ''
@@ -222,16 +225,10 @@ function redmond_adjust_dialog_sizes() {
                 var contentStyles = {
                         'overflow-y': 'scroll',
                         'overflow-x': 'auto',
-                        'min-height': ''
+                        'min-height': '',
+                        'height': '',
+                        'max-height': shouldCapHeight ? maxContentHeight : ''
                 };
-
-                if ( contentHeight > 0 ) {
-                        contentStyles.height = '';
-                        contentStyles['max-height'] = shouldCapHeight ? contentHeight : '';
-                } else {
-                        contentStyles.height = '';
-                        contentStyles['max-height'] = '';
-                }
 
                 contentArea.css(contentStyles);
 
@@ -245,14 +242,9 @@ function redmond_adjust_dialog_sizes() {
                                         of: positionTarget,
                                         collision: 'fit'
                                 },
-                                height: 'auto'
+                                height: 'auto',
+                                maxHeight: shouldCapHeight ? availableHeight : false
                         };
-
-                        if ( shouldCapHeight && targetWindowHeight > 0 ) {
-                                dialogOptions.maxHeight = targetWindowHeight;
-                        } else {
-                                dialogOptions.maxHeight = false;
-                        }
 
                         contentArea.dialog('option', dialogOptions);
                 }
@@ -271,7 +263,17 @@ function redmond_close_this( obj ) {
                 }
         }
 
-        if ( dialogContent.length && typeof dialogContent.dialog === 'function' ) {
-                dialogContent.dialog('close');
+        if ( dialogContent.length ) {
+                var dialogWrapper = dialogContent.closest('.ui-dialog');
+
+                if ( typeof dialogContent.dialog === 'function' ) {
+                        dialogContent.dialog('close');
+                }
+
+                if ( dialogWrapper.length ) {
+                        dialogWrapper.addClass('redmond-dialog-hidden');
+                }
         }
+
+        jQuery(window).trigger('checkOpenWindows');
 }
