@@ -262,11 +262,12 @@ if ( current_user_can( 'publish_posts' ) ) {
 										</ul>
 									</div>
 									<?php
-									print '</li>' . "\r\n";
-								}
-							</ul>
-						</div>
-					</li>
+										print '</li>' . "\r\n";
+									}
+									?>
+								</ul>
+							</div>
+						</li>
 				</ul>
 				<div id="start-menu-login-bar-outer">
 					<div id="start-menu-login-bar-inner">
