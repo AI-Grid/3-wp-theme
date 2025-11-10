@@ -633,8 +633,9 @@ div.redmond-dialog-window>div.ui-dialog-content {
 }
 
 .ui-dialog .ui-dialog-content {
-        overflow-y: auto;
-        overflow-x: auto;
+    max-height: calc(100vh - 80px) !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
 }
 
 .ui-resizable-handle {
