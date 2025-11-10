@@ -311,6 +311,25 @@ if ( current_user_can( 'publish_posts' ) ) {
 			       <div id="modal-holder"></div>
 		       </div>
 	       </div>
+	<div id="redmond-splash">
+    <div class="redmond-splash-inner">
+        <div class="redmond-splash-logo">
+            I-Grid
+        </div>
+
+        <pre class="redmond-splash-sheep">
+   <img src="https://i.let-us.cyou/connect/sheepy.gif">
+        </pre>
+
+        <div class="redmond-splash-subtitle">
+            Loading<span id="redmond-splash-dots">.</span>
+        </div>
+
+        <div class="redmond-splash-progress">
+            <span class="redmond-splash-bar"></span>
+        </div>
+    </div>
+</div>
 	       <?php
 	       //print('<pre>');
 	       //print_r( wp_kses_allowed_html( 'post' ) );
