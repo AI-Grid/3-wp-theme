@@ -245,13 +245,14 @@ function open_post_as_dialog( postId ) {
 				redmondHandleAjaxError();
 				return;
 			}
-			redmond_window( data.task_name , data.post_title , data.post_content , data.fileMenu , true, true , data.post_icon );
-			processes[data.task_name].find('article').css({
-				padding: 10,
-			});
-			sounds.open.play();
-		}
-	});
+                        redmond_window( data.task_name , data.post_title , data.post_content , data.fileMenu , true, true , data.post_icon );
+                        processes[data.task_name].find('article').css({
+                                padding: 10,
+                        });
+                        redmondEnsureDialogScroll( processes[data.task_name] );
+                        sounds.open.play();
+                }
+        });
 }
 
 
@@ -288,7 +289,10 @@ function open_archive_as_dialog( archive , taxonomy , targetId ) {
 			if( typeof( targetId ) !== 'undefined' && jQuery("#" + targetId ).length > 0 ) {
 				jQuery("#"+targetId).dialog('close');
 			}
-			redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
+                        redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
+                        if ( processes[data.taskname] ) {
+                                redmondEnsureDialogScroll( processes[data.taskname] );
+                        }
 			jQuery("#" + data.taskname).find('a').on('click',function(e) {
 				if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
 					e.preventDefault();
@@ -337,7 +341,10 @@ function open_redmond_authors_window( author ) {
 			if( typeof( targetId ) !== 'undefined' && jQuery("#" + targetId ).length > 0 ) {
 				jQuery("#"+targetId).dialog('close');
 			}
-			redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
+                        redmond_window( data.taskname , data.title , data.html , data.menu , true, true , data.icon );
+                        if ( processes[data.taskname] ) {
+                                redmondEnsureDialogScroll( processes[data.taskname] );
+                        }
 			jQuery("#" + data.taskname).find('a').on('click',function(e) {
 				if( typeof( jQuery(this).attr('id') ) === 'undefined' && typeof( jQuery(this).attr('data-type') ) !== 'undefined' ) {
 					e.preventDefault();
@@ -386,7 +393,10 @@ function open_redmond_search_window( search ) {
 				redmondHandleAjaxError();
 				return;
 			}
-			redmond_window( 'searchwindow' , windowTitle , data.html , redmond_terms.default_file_menu , false , true , redmond_terms.searchIcon );
+                        redmond_window( 'searchwindow' , windowTitle , data.html , redmond_terms.default_file_menu , false , true , redmond_terms.searchIcon );
+                        if ( processes.searchwindow ) {
+                                redmondEnsureDialogScroll( processes.searchwindow );
+                        }
 			jQuery("#searchwindow").find('button').on('click',function(e) {
 				e.preventDefault();
 				open_redmond_search_window( jQuery('#searchwindow').find('input').val() );
@@ -445,8 +455,9 @@ function redmondOpenAjaxDialog( processId, data, fallbackTitle ) {
         var dialogIcon = ( data && data.icon ) ? data.icon : redmond_terms.windowIcon;
         var canResize = ( data && typeof data.resizable === 'boolean' ) ? data.resizable : false;
         var draggable = ( data && typeof data.draggable === 'boolean' ) ? data.draggable : true;
+        var limitHeight = ( data && typeof data.limitHeight === 'boolean' ) ? data.limitHeight : true;
 
-        redmond_window( processId, dialogTitle, dialogHtml, dialogMenu, canResize, draggable, dialogIcon );
+        redmond_window( processId, dialogTitle, dialogHtml, dialogMenu, canResize, draggable, dialogIcon, limitHeight );
 
         if ( ! processes[processId] || ! processes[processId].length ) {
                 return null;
@@ -550,17 +561,18 @@ function do_redmond_error_window( message ) {
         contents += '<p>' + message +'</p>' + "\r\n";
         contents += '<span class="button-outer dialog-close-button"><button class="system-button" type="button" onclick="redmond_close_this(this); return false;">' + redmond_terms.closetext + '</button></span>' + "\r\n";
         redmond_window('error',redmond_terms.errTitle,contents,null,false,true,redmond_terms.errorIcon);
-	processes.error.css({
-		'overflow-y': 'hidden',
-		background: '#1f2937',
-		'background-color': '#1f2937',
-		padding: 10,
-		'max-width': 700,
-	});
+        processes.error.css({
+                'overflow-y': 'hidden',
+                background: '#1f2937',
+                'background-color': '#1f2937',
+                padding: 10,
+                'max-width': 700,
+        });
         processes.error.find('div.file-bar').css({
                 display:'none',
-	});
-	sounds.error.play();
+        });
+        redmondEnsureDialogScroll( processes.error );
+        sounds.error.play();
 }
 
 function redmond_comment_field( postid ) {

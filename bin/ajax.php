@@ -226,6 +226,7 @@
                         'icon'       => redmond_get_post_icon( $post_id ),
                         'resizable'  => false,
                         'draggable'  => true,
+                        'limitHeight'=> true,
                 );
 
                 wp_send_json_success( $data );
@@ -312,6 +313,7 @@
                         'icon'      => redmond_get_post_icon( $post_id ),
                         'resizable' => false,
                         'draggable' => true,
+                        'limitHeight'=> true,
                 );
 
                 wp_send_json_success( $data );
