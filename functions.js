@@ -7,6 +7,28 @@ var sounds = {
 jQuery(function() {
 	startSystemClock();
 	handle_start_menu();
+	// --- Splash screen (10 seconds) with loading dots ---
+	var $splash = jQuery('#redmond-splash');
+	if ( $splash.length ) {
+		var splashDuration = 10000; // 10 seconds
+
+		var $dots = jQuery('#redmond-splash-dots');
+		var dotCount = 1;
+
+		// animate "Loading." -> ".." -> "..." -> "."
+		var dotsTimer = setInterval(function() {
+			if ( !$dots.length ) return;
+			dotCount = (dotCount % 3) + 1; // 1..3
+			$dots.text('.'.repeat(dotCount));
+		}, 400);
+
+		setTimeout(function() {
+			clearInterval(dotsTimer);
+			$splash.fadeOut(600, function() {
+				jQuery(this).remove();
+			});
+		}, splashDuration);
+	}
 
 	// Global link handler: only hijack desktop/start-menu links,
 	// never links inside already-open dialogs.
@@ -100,20 +122,29 @@ jQuery(document).on('click', '.redmond-close-window', function ( e ) {
 		}
 	}
 });
-// Make the jQuery UI "X" button actually close the window too
+
+// Force the jQuery UI titlebar "X" to actually close the window
 jQuery(document).on('click', '.ui-dialog-titlebar-close', function ( e ) {
-    e.preventDefault();
-    e.stopPropagation();
+	e.preventDefault();
+	e.stopPropagation();
 
-    var $dialog  = jQuery(this).closest('.ui-dialog');
-    var $content = $dialog.find('.ui-dialog-content');
+	// Prefer the theme's own close logic if it exists
+	if ( typeof redmond_close_this === 'function' ) {
+		redmond_close_this(this);
+		return;
+	}
 
-    if ( $content.length && typeof $content.dialog === 'function' ) {
-        $content.dialog('close');
-    } else if ( $dialog.length ) {
-        $dialog.hide();
-    }
+	// Fallback: try to close the jQuery UI dialog directly
+	var $dialog  = jQuery(this).closest('.ui-dialog');
+	var $content = $dialog.find('.ui-dialog-content');
+
+	if ( $content.length && typeof $content.dialog === 'function' ) {
+		$content.dialog('close');
+	} else if ( $dialog.length ) {
+		$dialog.remove();
+	}
 });
+
 // Resize handler: keep dialog content height limited to viewport
 // and always scrollable when needed.
 jQuery(window)
