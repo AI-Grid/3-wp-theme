@@ -1,10 +1,10 @@
 /*
-Theme Name:         Longhorn Inspired
-Theme URI:          https://jak.guru
-Description:        WordPress theme inspired by the Windows Longhorn aesthetic
+Theme Name:         I-Grid OS
+Theme URI:          https://i.let-us.cyou
+Description:        WordPress theme inspired by Jak Guru the Windows theme
 Version:            1.0.0
-Author:             Jak Guru
-Author URI:         https://jak.guru
+Author:             Marty Mouse(Jak Guru)
+Author URI:         https://easierit.org
 
 License:            MIT License
 License URI:        http://opensource.org/licenses/MIT
@@ -1089,4 +1089,71 @@ div.search-panel h4>img {
 
 div.initial_content {
 	display: none;
+}
+/* Splash screen */
+#redmond-splash {
+    position: fixed;
+    inset: 0;
+    background: #020617;
+    color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.redmond-splash-inner {
+    text-align: center;
+    padding: 24px 32px;
+    background: rgba(15, 23, 42, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+    min-width: 260px;
+}
+
+.redmond-splash-logo {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.redmond-splash-sheep {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    line-height: 1.2;
+    margin: 8px 0 14px;
+    white-space: pre;
+}
+
+.redmond-splash-subtitle {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-bottom: 16px;
+}
+
+.redmond-splash-progress {
+    width: 180px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 1);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.redmond-splash-bar {
+    display: block;
+    height: 100%;
+    width: 40%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #22c55e, #22d3ee);
+    animation: redmond-splash-slide 1.3s infinite ease-in-out;
+}
+
+@keyframes redmond-splash-slide {
+    0%   { transform: translateX(-120%); }
+    50%  { transform: translateX(0%); }
+    100% { transform: translateX(120%); }
 }
