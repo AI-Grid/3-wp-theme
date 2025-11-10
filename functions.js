@@ -100,7 +100,20 @@ jQuery(document).on('click', '.redmond-close-window', function ( e ) {
 		}
 	}
 });
+// Make the jQuery UI "X" button actually close the window too
+jQuery(document).on('click', '.ui-dialog-titlebar-close', function ( e ) {
+    e.preventDefault();
+    e.stopPropagation();
 
+    var $dialog  = jQuery(this).closest('.ui-dialog');
+    var $content = $dialog.find('.ui-dialog-content');
+
+    if ( $content.length && typeof $content.dialog === 'function' ) {
+        $content.dialog('close');
+    } else if ( $dialog.length ) {
+        $dialog.hide();
+    }
+});
 // Resize handler: keep dialog content height limited to viewport
 // and always scrollable when needed.
 jQuery(window)
