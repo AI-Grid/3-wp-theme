@@ -12,6 +12,10 @@ jQuery(function() {
                 .on('click.redmondGlobal', function( e ) {
                         var $a = jQuery(this);
 
+                        if ( $a.closest('.ui-dialog').length ) {
+                                return;
+                        }
+
                         if ( $a.hasClass('redmond-close-window') ) {
                                 return;
                         }
@@ -542,9 +546,16 @@ function redmondEnsureDialogScroll( dialogContent ) {
                         'overflow-y': 'auto',
                         'overflow-x': 'auto',
                 });
+
+                wrapper.css({
+                        'max-height': '100%',
+                        overflow: 'visible',
+                });
         }
 
-        redmond_adjust_dialog_sizes();
+        if ( typeof redmond_adjust_dialog_sizes === 'function' ) {
+                redmond_adjust_dialog_sizes();
+        }
 }
 
 function redmondCopyToClipboard( text ) {
