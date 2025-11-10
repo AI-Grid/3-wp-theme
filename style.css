@@ -135,6 +135,21 @@ input.system-field {
         padding-right: 2px;
 }
 
+textarea.system-textarea {
+        width: 100%;
+        border: solid 1px;
+        border-top: solid 2px;
+        border-left: solid 2px;
+        border-bottom-color: var(--redmond-border-highlight);
+        border-right-color: var(--redmond-border-highlight);
+        border-left-color: var(--redmond-border-dark);
+        border-top-color: var(--redmond-border-dark);
+        background: linear-gradient(180deg, rgba(25,25,33,0.95) 0%, rgba(10,10,16,0.95) 100%);
+        color: var(--redmond-text);
+        padding: 6px;
+        box-sizing: border-box;
+}
+
 span.button-outer.activated>button.system-button:active, span.button-outer.activated>button.system-button {
 	border-bottom-color: var(--redmond-border-highlight);
 	border-right-color: var(--redmond-border-highlight);
@@ -534,7 +549,7 @@ div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dial
 }
 
 div.redmond-dialog-window>.ui-dialog-content {
-        overflow-y: scroll;
+        overflow-y: auto;
 }
 
 div.redmond-dialog-window>.ui-dialog-content>article {
@@ -613,9 +628,119 @@ div.redmond-dialog-window>div.ui-dialog-content {
         border-left-color: var(--redmond-border-highlight);
         border-right-color: var(--redmond-border-dark);
 	border-bottom-color: var(--redmond-border-dark);
-	min-height: 50px !important;
-	position: relative;
-	box-sizing: border-box;
+        min-height: 50px !important;
+        position: relative;
+        box-sizing: border-box;
+}
+
+.redmond-comment-window .ui-dialog-content,
+.redmond-share-window .ui-dialog-content {
+        overflow-y: auto;
+}
+
+.redmond-comment-dialog-content,
+.redmond-share-dialog {
+        padding: 15px;
+        color: var(--redmond-text);
+}
+
+.redmond-comment-dialog-content p {
+        margin-bottom: 12px;
+}
+
+.redmond-comment-dialog-content label,
+.redmond-share-copy label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+}
+
+.redmond-comment-dialog-content input.system-field,
+.redmond-comment-dialog-content textarea.system-textarea,
+.redmond-share-copy input.system-field {
+        width: 100%;
+        box-sizing: border-box;
+}
+
+.redmond-comment-dialog-content textarea.system-textarea {
+        min-height: 140px;
+        resize: vertical;
+        padding: 6px;
+}
+
+.redmond-comment-dialog-content .form-submit {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 18px;
+}
+
+.redmond-comment-dialog-content .required {
+        color: var(--redmond-accent);
+}
+
+.redmond-share-list {
+        list-style: none;
+        margin: 0 0 16px;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+}
+
+.redmond-share-list a {
+        display: block;
+        padding: 8px 10px;
+        text-decoration: none;
+        color: var(--redmond-text);
+        border: 1px solid var(--redmond-border-highlight);
+        background: linear-gradient(180deg, rgba(36,36,44,0.9) 0%, rgba(12,12,18,0.9) 100%);
+        border-radius: 3px;
+        text-align: center;
+        transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.redmond-share-list a:hover,
+.redmond-share-list a:focus {
+        border-color: var(--redmond-accent);
+        background: linear-gradient(180deg, rgba(255,77,79,0.35) 0%, rgba(36,36,44,0.9) 100%);
+        color: var(--redmond-text);
+}
+
+.redmond-share-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+}
+
+.redmond-share-copy-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+}
+
+.redmond-share-copy-controls span.button-outer {
+        flex-shrink: 0;
+}
+
+.redmond-share-feedback {
+        font-size: 11px;
+        min-height: 14px;
+        color: var(--redmond-text-muted);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+}
+
+.redmond-share-feedback.is-visible {
+        opacity: 1;
+}
+
+.redmond-share-feedback.is-success {
+        color: #9fe6a0;
+}
+
+.redmond-share-feedback.is-error {
+        color: #ff9f9f;
 }
 
 .ui-resizable-e {

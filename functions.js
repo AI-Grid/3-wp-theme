@@ -211,10 +211,10 @@ function open_this_as_redmond_dialog( obj ) {
                 var process = new Date().getTime();
                 redmond_window( process , jQuery(obj).attr('title') , html , false , true , true , redmond_terms.externalPageIcon );
                 processes[process].css({
-                        'overflow-y': 'scroll',
+                        'overflow-y': 'auto',
                         'overflow-x': 'auto'
                 });
-	}
+        }
 }
 
 function open_category_as_redmond_dialog( obj ) {
@@ -429,18 +429,125 @@ function redmondHandleAjaxError( jqXHR ) {
 }
 
 function redmondParseAjaxResponse( returned ) {
-	if ( ! returned || typeof returned.success === 'undefined' ) {
-		return false;
-	}
-	if ( true !== returned.success || typeof returned.data === 'undefined' ) {
-		return false;
-	}
-	return returned.data;
+        if ( ! returned || typeof returned.success === 'undefined' ) {
+                return false;
+        }
+        if ( true !== returned.success || typeof returned.data === 'undefined' ) {
+                return false;
+        }
+        return returned.data;
+}
+
+function redmondOpenAjaxDialog( processId, data, fallbackTitle ) {
+        var dialogTitle = ( data && data.title ) ? data.title : fallbackTitle;
+        var dialogHtml = ( data && data.html ) ? data.html : '';
+        var dialogMenu = ( data && data.menu ) ? data.menu : null;
+        var dialogIcon = ( data && data.icon ) ? data.icon : redmond_terms.windowIcon;
+        var canResize = ( data && typeof data.resizable === 'boolean' ) ? data.resizable : false;
+        var draggable = ( data && typeof data.draggable === 'boolean' ) ? data.draggable : true;
+
+        redmond_window( processId, dialogTitle, dialogHtml, dialogMenu, canResize, draggable, dialogIcon );
+
+        if ( ! processes[processId] || ! processes[processId].length ) {
+                return null;
+        }
+
+        return processes[processId];
+}
+
+function redmondEnsureDialogScroll( dialogContent ) {
+        if ( ! dialogContent || ! dialogContent.length ) {
+                return;
+        }
+
+        dialogContent.css({
+                'overflow-y': 'auto',
+                'overflow-x': 'auto',
+        });
+
+        var wrapper = dialogContent.closest('.ui-dialog');
+        if ( wrapper.length ) {
+                wrapper.find('.ui-dialog-content').css({
+                        'overflow-y': 'auto',
+                        'overflow-x': 'auto',
+                });
+        }
+
+        redmond_adjust_dialog_sizes();
+}
+
+function redmondCopyToClipboard( text ) {
+        if ( navigator.clipboard && typeof navigator.clipboard.writeText === 'function' ) {
+                return navigator.clipboard.writeText( text );
+        }
+
+        return new Promise(function( resolve, reject ) {
+                var $buffer = jQuery('<textarea class="redmond-copy-buffer" aria-hidden="true"></textarea>');
+                $buffer.val( text ).css({
+                        position: 'fixed',
+                        top: '-1000px',
+                        left: '-1000px',
+                        opacity: 0,
+                        width: '1px',
+                        height: '1px',
+                });
+                jQuery('body').append( $buffer );
+
+                var node = $buffer.get(0);
+                try {
+                        node.focus();
+                        node.select();
+                        if ( typeof node.setSelectionRange === 'function' ) {
+                                node.setSelectionRange( 0, node.value.length );
+                        }
+                        var successful = document.execCommand( 'copy' );
+                        $buffer.remove();
+                        if ( successful ) {
+                                resolve();
+                        }
+                        else {
+                                reject();
+                        }
+                }
+                catch ( err ) {
+                        $buffer.remove();
+                        reject( err );
+                }
+        });
+}
+
+function redmondShareFeedback( dialogContent, message, isError ) {
+        if ( ! dialogContent || ! dialogContent.length || ! message ) {
+                return;
+        }
+
+        var feedback = dialogContent.find('.redmond-share-feedback');
+        if ( ! feedback.length ) {
+                        return;
+        }
+
+        feedback.stop( true, true );
+        feedback.text( message );
+        feedback.removeClass( 'is-error is-success is-visible' );
+        feedback.addClass( isError ? 'is-error' : 'is-success' );
+        feedback.addClass( 'is-visible' );
+
+        var previousTimer = feedback.data( 'redmondFeedbackTimer' );
+        if ( previousTimer ) {
+                clearTimeout( previousTimer );
+        }
+
+        var timer = setTimeout( function() {
+                feedback.removeClass( 'is-visible is-error is-success' );
+                feedback.text( '' );
+        }, 2400 );
+
+        feedback.data( 'redmondFeedbackTimer', timer );
 }
 
 function do_redmond_error_window( message ) {
-	var contents = '';
-	contents += '<p>' + message +'</p>' + "\r\n";
+        var contents = '';
+        contents += '<p>' + message +'</p>' + "\r\n";
         contents += '<span class="button-outer dialog-close-button"><button class="system-button" type="button" onclick="redmond_close_this(this); return false;">' + redmond_terms.closetext + '</button></span>' + "\r\n";
         redmond_window('error',redmond_terms.errTitle,contents,null,false,true,redmond_terms.errorIcon);
 	processes.error.css({
@@ -457,20 +564,113 @@ function do_redmond_error_window( message ) {
 }
 
 function redmond_comment_field( postid ) {
-	html = '<p>Test Content</p>';
-        redmond_window('comment_for_' + postid,redmond_terms.errTitle,html,null,false,true,redmond_terms.errorIcon);
-	processes.error.css({
-		'overflow-y': 'hidden',
-		background: '#1f2937',
-		'background-color': '#1f2937',
-		padding: 10,
-		'max-width': 700,
-	});
-        processes.error.find('div.file-bar').css({
-                display:'none',
-	});
+        jQuery.ajax({
+                url: redmond_terms.ajaxurl,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                        action: 'redmond_get_comment_form',
+                        nonce: redmond_terms.nonce,
+                        postId: postid,
+                },
+                success: function( returned ) {
+                        var data = redmondParseAjaxResponse( returned );
+                        if ( false === data ) {
+                                redmondHandleAjaxError();
+                                return;
+                        }
+
+                        var processId = 'comment_for_' + postid;
+                        var dialogContent = redmondOpenAjaxDialog( processId, data, 'Comment' );
+                        if ( ! dialogContent ) {
+                                return;
+                        }
+
+                        var wrapper = dialogContent.closest('.ui-dialog');
+                        if ( wrapper.length ) {
+                                wrapper.addClass('redmond-comment-window');
+                        }
+
+                        redmondEnsureDialogScroll( dialogContent );
+
+                        var commentField = dialogContent.find('#comment');
+                        if ( commentField.length ) {
+                                commentField.trigger('focus');
+                        }
+
+                        sounds.open.play();
+                },
+                error: function( jqXHR ) {
+                        redmondHandleAjaxError( jqXHR );
+                }
+        });
 }
 
 function redmond_share_post( postid ) {
-	do_redmond_error_window('Sorry, that function is not working yet.');
+        jQuery.ajax({
+                url: redmond_terms.ajaxurl,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                        action: 'redmond_get_share_data',
+                        nonce: redmond_terms.nonce,
+                        postId: postid,
+                },
+                success: function( returned ) {
+                        var data = redmondParseAjaxResponse( returned );
+                        if ( false === data ) {
+                                redmondHandleAjaxError();
+                                return;
+                        }
+
+                        var processId = 'share_post_' + postid;
+                        var dialogContent = redmondOpenAjaxDialog( processId, data, 'Share' );
+                        if ( ! dialogContent ) {
+                                return;
+                        }
+
+                        var wrapper = dialogContent.closest('.ui-dialog');
+                        if ( wrapper.length ) {
+                                wrapper.addClass('redmond-share-window');
+                        }
+
+                        redmondEnsureDialogScroll( dialogContent );
+
+                        dialogContent
+                                .off('click.redmondShareCopy')
+                                .on('click.redmondShareCopy', '.redmond-copy-link', function( event ) {
+                                        event.preventDefault();
+                                        var button = jQuery( this );
+                                        var targetId = button.data( 'copyTarget' );
+                                        if ( ! targetId ) {
+                                                return;
+                                        }
+
+                                        var target = dialogContent.find( '#' + targetId );
+                                        if ( ! target.length ) {
+                                                return;
+                                        }
+
+                                        redmondCopyToClipboard( target.val() )
+                                                .then( function() {
+                                                        redmondShareFeedback( dialogContent, button.data( 'successMessage' ), false );
+                                                } )
+                                                .catch( function() {
+                                                        if ( target.length && target[0] && typeof target[0].select === 'function' ) {
+                                                                target.trigger('focus');
+                                                                target[0].select();
+                                                                if ( typeof target[0].setSelectionRange === 'function' ) {
+                                                                        target[0].setSelectionRange( 0, target.val().length );
+                                                                }
+                                                        }
+                                                        redmondShareFeedback( dialogContent, button.data( 'errorMessage' ), true );
+                                                } );
+                                });
+
+                        sounds.open.play();
+                },
+                error: function( jqXHR ) {
+                        redmondHandleAjaxError( jqXHR );
+                }
+        });
 }
