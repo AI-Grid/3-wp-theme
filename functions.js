@@ -5,26 +5,41 @@ var sounds = {
 };
 
 jQuery(function() {
-	startSystemClock();
-	handle_start_menu();
-	jQuery('a').on('click',function(e){
-		if( typeof( jQuery(this).attr('id') ) === 'undefined' || 
-			( jQuery(this).attr('id') !== 'home-start-menu-link' 
-				&& jQuery(this).attr('id') !== 'new-post-start-menu-link' 
-				&& jQuery(this).attr('id') !== 'control-panel-start-menu-link'
-				&& jQuery(this).attr('id') !== 'start-menu-bottom-bar-logout'
-				&& jQuery(this).attr('id') !== 'start-menu-bottom-bar-register'
-				&& jQuery(this).attr('id') !== 'start-menu-bottom-bar-login'
-				&& jQuery(this).attr('id') !== 'system-info-start-menu-link' 
-				&& jQuery(this).attr('id') !== 'my-documents-start-menu-link'
-				&& jQuery(this).attr('id') !== 'my-tags-start-menu-link'
-				&& jQuery(this).attr('id') !== 'authors-start-menu-link'
-				&& jQuery(this).attr('id') !== 'system-search-start-menu-link' )
-		) {
-			e.preventDefault();
-			open_this_as_redmond_dialog(this);
-		}
-	});
+        startSystemClock();
+        handle_start_menu();
+        jQuery('a')
+                .off('click.redmondGlobal')
+                .on('click.redmondGlobal', function( e ) {
+                        var $a = jQuery(this);
+
+                        if ( $a.hasClass('redmond-close-window') ) {
+                                return;
+                        }
+
+                        var id = $a.attr('id');
+
+                        if (
+                                typeof id !== 'undefined' &&
+                                (
+                                        id === 'home-start-menu-link' ||
+                                        id === 'new-post-start-menu-link' ||
+                                        id === 'control-panel-start-menu-link' ||
+                                        id === 'start-menu-bottom-bar-logout' ||
+                                        id === 'start-menu-bottom-bar-register' ||
+                                        id === 'start-menu-bottom-bar-login' ||
+                                        id === 'system-info-start-menu-link' ||
+                                        id === 'my-documents-start-menu-link' ||
+                                        id === 'my-tags-start-menu-link' ||
+                                        id === 'authors-start-menu-link' ||
+                                        id === 'system-search-start-menu-link'
+                                )
+                        ) {
+                                return;
+                        }
+
+                        e.preventDefault();
+                        open_this_as_redmond_dialog(this);
+                });
 	jQuery(window).on('checkOpenWindows',function() {
 		checkOpenWindows();
 	});
@@ -50,13 +65,58 @@ jQuery(function() {
         if ( typeof redmond_adjust_dialog_sizes === 'function' ) {
                 redmond_adjust_dialog_sizes();
         }
+});
 
-        jQuery(window).on('resize',function() {
+jQuery(document).on('click', '.redmond-close-window', function ( e ) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var $dialog = jQuery(this).closest('.ui-dialog');
+
+        if ( $dialog.length ) {
+                var $content = $dialog.find('.ui-dialog-content');
+
+                if ( $content.length && typeof $content.dialog === 'function' ) {
+                        $content.dialog('close');
+                }
+                else {
+                        $dialog.hide();
+                }
+        }
+});
+
+jQuery(window)
+        .off('resize.redmond')
+        .on('resize.redmond', function () {
+                var maxHeight = jQuery(window).height() * 0.9;
+
+                jQuery('div.redmond-dialog-window').each(function () {
+                        var $window = jQuery(this);
+
+                        if ( $window.height() > maxHeight ) {
+                                $window.css({
+                                        height: maxHeight,
+                                        'padding-bottom': 20
+                                });
+                        }
+                        else {
+                                $window.css({
+                                        height: 'auto',
+                                        'padding-bottom': 0
+                                });
+                        }
+
+                        $window.find('.ui-dialog-content').css({
+                                'overflow-y': 'auto',
+                                'overflow-x': 'auto'
+                        });
+                });
+
                 if ( typeof redmond_adjust_dialog_sizes === 'function' ) {
                         redmond_adjust_dialog_sizes();
                 }
-        });
-});
+        })
+        .trigger('resize.redmond');
 
 function checkOpenWindows() {
         var processList = '';

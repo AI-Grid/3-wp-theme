@@ -168,25 +168,27 @@ function redmond_style_close_button( closeButton ) {
                 return;
         }
 
+        var titleBar = closeButton.closest('.ui-dialog-titlebar');
+
+        if ( ! titleBar.length ) {
+                return;
+        }
+
+        if ( titleBar.find('.redmond-close-window').length ) {
+                closeButton.remove();
+                return;
+        }
+
         var closeLabel = ( window.redmond_terms && redmond_terms.close ) ? redmond_terms.close : 'Close';
+        var closeLink = jQuery('<a href="#" class="redmond-close-window redmond-close-button" role="button"></a>');
 
-        closeButton
-                .removeClass('ui-button-icon-only')
-                .addClass('redmond-close-button')
-                .attr('type', 'button')
+        closeLink
                 .attr('title', closeLabel)
-                .attr('aria-label', closeLabel);
+                .attr('aria-label', closeLabel)
+                .append('<span class="redmond-close-text" aria-hidden="true">&times;</span>');
 
-        closeButton.find('span.ui-icon').remove();
-        closeButton.find('span.ui-button-icon-space').remove();
-        closeButton
-                .contents()
-                .filter(function(){
-                        return this.nodeType === 3;
-                })
-                .remove();
-        closeButton.find('span.redmond-close-text').remove();
-        closeButton.append('<span class="redmond-close-text" aria-hidden="true">&times;</span>');
+        titleBar.append( closeLink );
+        closeButton.remove();
 }
 
 function redmond_adjust_dialog_sizes() {

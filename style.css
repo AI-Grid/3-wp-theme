@@ -575,7 +575,7 @@ div.redmond-dialog-window>.ui-dialog-titlebar>span {
 	padding-left: 25px;
 }
 
-div.redmond-dialog-window>.ui-dialog-titlebar>button {
+div.redmond-dialog-window>.ui-dialog-titlebar>.redmond-close-button {
         position: absolute;
         top: 1px;
         right: 1px;
@@ -587,35 +587,34 @@ div.redmond-dialog-window>.ui-dialog-titlebar>button {
         border-left-color: var(--redmond-border-highlight);
         border-right-color: var(--redmond-border-dark);
         border-bottom-color: var(--redmond-border-dark);
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 0;
         line-height: 1;
         height: auto;
         width: 22px;
         font-weight: 700;
         color: var(--redmond-text);
+        text-decoration: none;
 }
 
-div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+div.redmond-dialog-window>.ui-dialog-titlebar>.redmond-close-button {
         font-size: 16px;
-        padding: 0;
 }
 
-div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button .redmond-close-text {
+div.redmond-dialog-window>.ui-dialog-titlebar>.redmond-close-button .redmond-close-text {
         line-height: 1;
         font-size: 16px;
         display: block;
 }
 
-div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button:focus-visible {
+div.redmond-dialog-window>.ui-dialog-titlebar>.redmond-close-button:focus-visible {
         outline: 2px solid var(--redmond-accent);
         outline-offset: 1px;
 }
 
-div.redmond-dialog-window>.ui-dialog-titlebar>button.redmond-close-button:hover {
+div.redmond-dialog-window>.ui-dialog-titlebar>.redmond-close-button:hover {
         background: linear-gradient(180deg, rgba(255,77,79,0.35) 0%, rgba(36,36,44,0.95) 100%);
         color: var(--redmond-text);
 }
@@ -627,10 +626,19 @@ div.redmond-dialog-window>div.ui-dialog-content {
         border-top-color: var(--redmond-border-highlight);
         border-left-color: var(--redmond-border-highlight);
         border-right-color: var(--redmond-border-dark);
-	border-bottom-color: var(--redmond-border-dark);
+        border-bottom-color: var(--redmond-border-dark);
         min-height: 50px !important;
         position: relative;
         box-sizing: border-box;
+}
+
+.ui-dialog .ui-dialog-content {
+        overflow-y: auto;
+        overflow-x: auto;
+}
+
+.ui-resizable-handle {
+        display: none !important;
 }
 
 .redmond-comment-window .ui-dialog-content,

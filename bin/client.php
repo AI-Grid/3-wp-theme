@@ -576,7 +576,13 @@
 		foreach ( $cells as $cell ) {
 		$type = $cell['type'];
 		$html .= '		<td>' . "\r\n";
-		$html .= '			<a href="' . esc_url( $cell['url'] ) . '" data-type="' . esc_html( $type ) . '" title="' . $cell['fulltitle'] . '"';
+		$html .= '			<a href="' . esc_url( $cell['url'] ) . '" data-type="' . esc_html( $type ) . '"';
+
+		if ( 'regular' === $type ) {
+			$html .= ' class="desktop-window-link"';
+		}
+
+		$html .= ' title="' . $cell['fulltitle'] . '"';
 		switch ( $type ) {
 			case 'regular':
 				$html .= ' data-post-id="' . intval( $cell['id'] ) . '"';
@@ -619,6 +625,8 @@
 					'title' => true,
 					'data-post-id' => true,
 					'data-category-id' => true,
+					'data-author-id' => true,
+					'class' => true,
 				),
 				'img' => array(
 					'src' => true,
