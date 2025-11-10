@@ -72,7 +72,12 @@ add_action( 'wp_ajax_getsearch','redmond_getsearch_callback' );
 add_action( 'wp_ajax_nopriv_getsearch','redmond_getsearch_callback' );
 add_action( 'wp_ajax_getauthor','redmond_getauthor_callback' );
 add_action( 'wp_ajax_nopriv_getauthor','redmond_getauthor_callback' );
+add_action( 'wp_ajax_redmond_get_comment_form', 'redmond_get_comment_form_callback' );
+add_action( 'wp_ajax_nopriv_redmond_get_comment_form', 'redmond_get_comment_form_callback' );
+add_action( 'wp_ajax_redmond_get_share_data', 'redmond_share_post_callback' );
+add_action( 'wp_ajax_nopriv_redmond_get_share_data', 'redmond_share_post_callback' );
 add_action( 'wp_footer','redmond_set_info_cookies' );
+add_action( 'wp_enqueue_scripts', 'redmond_maybe_enqueue_comment_reply' );
 
 $redmond_head_cleanup = array(
 	'rsd_link',
@@ -87,7 +92,13 @@ $redmond_head_cleanup = array(
 );
 
 foreach ( $redmond_head_cleanup as $redmond_head_action ) {
-	remove_action( 'wp_head', $redmond_head_action );
+        remove_action( 'wp_head', $redmond_head_action );
+}
+
+function redmond_maybe_enqueue_comment_reply() {
+        if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+                wp_enqueue_script( 'comment-reply' );
+        }
 }
 
 ?>

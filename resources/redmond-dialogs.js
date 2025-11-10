@@ -3,7 +3,7 @@
  */
 var processes = {};
 
-function redmond_window( objid , title , content , filecommands , canResize , draggable , icon ) {
+function redmond_window( objid , title , content , filecommands , canResize , draggable , icon , limitHeight ) {
 	if( typeof( filecommands ) !== 'object' ) {
 		filecommands = {
 			'close': {
@@ -21,9 +21,12 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 	if( typeof( content ) == 'undefined' ) {
 		content = '';
 	}
-	if( typeof( icon ) == 'undefined' ) {
-		icon = redmond_terms.windowIcon;
-	}
+        if( typeof( icon ) == 'undefined' ) {
+                icon = redmond_terms.windowIcon;
+        }
+        if( typeof( limitHeight ) == 'undefined' ) {
+                limitHeight = true;
+        }
         var workspaceTarget = jQuery('#desktop-window-area');
         if ( ! workspaceTarget.length ) {
                 workspaceTarget = jQuery('body');
@@ -33,7 +36,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 processes[objid] = jQuery("#" + objid);
                 processes[objid].dialog({
                         autoOpen: true,
-                        closeOnEscape: false,
+                        closeOnEscape: true,
                         dialogClass: "redmond-dialog-window",
                         appendTo: workspaceTarget,
                         draggable: draggable,
@@ -62,13 +65,6 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
 
                                 var closeButton = processes[objid].parent().find('button.ui-dialog-titlebar-close');
                                 redmond_style_close_button(closeButton);
-                                closeButton
-                                        .off('click.redmondClose')
-                                        .on('click.redmondClose', function(event){
-                                                event.preventDefault();
-                                                event.stopPropagation();
-                                                redmond_close_this(this);
-                                        });
                                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
                                 jQuery(window).trigger('checkOpenWindows');
                                 processes[objid].parent()
@@ -101,7 +97,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                         height: 'auto',
                 });
                 processes[objid].parent()
-                        .attr('data-redmond-limit-height', canResize ? 'true' : 'false')
+                        .attr('data-redmond-limit-height', limitHeight ? 'true' : 'false')
                         .attr('data-redmond-process-id', objid);
         }
         else {
@@ -109,7 +105,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 processes[objid].find('div.file-bar>ul').append(redmond_filecommands_to_html(filecommands));
                 processes[objid].dialog('option', {
                         appendTo: workspaceTarget,
-                        closeOnEscape: false,
+                        closeOnEscape: true,
                         draggable: draggable,
                         resizable: canResize,
                         position: {
@@ -122,7 +118,7 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 });
 
                 processes[objid].parent()
-                        .attr('data-redmond-limit-height', canResize ? 'true' : 'false')
+                        .attr('data-redmond-limit-height', limitHeight ? 'true' : 'false')
                         .attr('data-redmond-process-id', objid)
                         .removeClass('redmond-dialog-hidden');
                 processes[objid].parent().find('.ui-dialog-titlebar>span').css({
@@ -132,13 +128,6 @@ function redmond_window( objid , title , content , filecommands , canResize , dr
                 });
                 var closeButton = processes[objid].parent().find('button.ui-dialog-titlebar-close');
                 redmond_style_close_button(closeButton);
-                closeButton
-                        .off('click.redmondClose')
-                        .on('click.redmondClose', function(event){
-                                event.preventDefault();
-                                event.stopPropagation();
-                                redmond_close_this(this);
-                        });
                 processes[objid].find('div.file-bar').zIndex(processes[objid].zIndex());
                 jQuery(window).trigger('checkOpenWindows');
                 processes[objid].parent()
@@ -232,7 +221,7 @@ function redmond_adjust_dialog_sizes() {
                 });
 
                 var contentStyles = {
-                        'overflow-y': 'scroll',
+                        'overflow-y': 'auto',
                         'overflow-x': 'auto',
                         'min-height': '',
                         'height': '',
@@ -266,23 +255,34 @@ function redmond_close_this( obj ) {
         var closed = false;
 
         if ( dialogWrapper.length ) {
-                var processId = dialogWrapper.attr('data-redmond-process-id');
+                var dialogContent = dialogWrapper.children('.ui-dialog-content').first();
 
-                if ( processId && processes[processId] && typeof processes[processId].dialog === 'function' ) {
-                        processes[processId].dialog('close');
+                if ( dialogContent.length && typeof dialogContent.dialog === 'function' ) {
+                        dialogContent.dialog('close');
                         closed = true;
                 }
 
                 if ( ! closed ) {
-                        var dialogContent = dialogWrapper.children('.ui-dialog-content').first();
+                        var processId = dialogWrapper.attr('data-redmond-process-id');
 
-                        if ( dialogContent.length && typeof dialogContent.dialog === 'function' ) {
-                                dialogContent.dialog('close');
+                        if ( processId && processes[processId] && typeof processes[processId].dialog === 'function' ) {
+                                processes[processId].dialog('close');
                                 closed = true;
                         }
                 }
 
-                dialogWrapper.addClass('redmond-dialog-hidden');
+                if ( ! closed ) {
+                        var dialogInstance = dialogWrapper.data('ui-dialog') || dialogWrapper.data('dialog');
+
+                        if ( dialogInstance && typeof dialogInstance.close === 'function' ) {
+                                dialogInstance.close();
+                                closed = true;
+                        }
+                }
+
+                if ( closed ) {
+                        dialogWrapper.addClass('redmond-dialog-hidden');
+                }
         }
         else {
                 var dialogContent = $trigger.closest('.ui-dialog-content');
