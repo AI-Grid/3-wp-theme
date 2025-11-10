@@ -148,4 +148,172 @@
 
                 wp_send_json_success( $data );
         }
+
+        function redmond_get_comment_form_callback() {
+                check_ajax_referer( 'redmond_ajax_nonce', 'nonce' );
+
+                if ( empty( $_POST['postId'] ) ) {
+                        wp_send_json_error( array( 'message' => __( 'Invalid post request.', RTEXTDOMAIN ) ), 400 );
+                }
+
+                $post_id = absint( wp_unslash( $_POST['postId'] ) );
+                if ( ! $post_id ) {
+                        wp_send_json_error( array( 'message' => __( 'Invalid post request.', RTEXTDOMAIN ) ), 400 );
+                }
+
+                $post = get_post( $post_id );
+                if ( empty( $post ) || 'publish' !== get_post_status( $post ) ) {
+                        wp_send_json_error( array( 'message' => __( 'The requested post could not be found.', RTEXTDOMAIN ) ), 404 );
+                }
+
+                if ( ! comments_open( $post_id ) ) {
+                        wp_send_json_error( array( 'message' => __( 'Comments are closed for this post.', RTEXTDOMAIN ) ), 403 );
+                }
+
+                $commenter          = wp_get_current_commenter();
+                $require_name_email = (bool) get_option( 'require_name_email' );
+                $aria_required      = $require_name_email ? " aria-required='true' required" : '';
+                $safe_title         = wp_strip_all_tags( get_the_title( $post_id ) );
+
+                $fields = array(
+                        'author' => '<p class="comment-form-author">'
+                                . '<label for="author">' . esc_html__( 'Name', RTEXTDOMAIN ) . ( $require_name_email ? ' <span class="required">*</span>' : '' ) . '</label>'
+                                . '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" class="system-field" size="30"' . $aria_required . ' />'
+                                . '</p>',
+                        'email'  => '<p class="comment-form-email">'
+                                . '<label for="email">' . esc_html__( 'Email', RTEXTDOMAIN ) . ( $require_name_email ? ' <span class="required">*</span>' : '' ) . '</label>'
+                                . '<input id="email" name="email" type="email" value="' . esc_attr( $commenter['comment_author_email'] ) . '" class="system-field" size="30"' . $aria_required . ' />'
+                                . '</p>',
+                        'url'    => '<p class="comment-form-url">'
+                                . '<label for="url">' . esc_html__( 'Website', RTEXTDOMAIN ) . '</label>'
+                                . '<input id="url" name="url" type="url" value="' . esc_attr( $commenter['comment_author_url'] ) . '" class="system-field" size="30" />'
+                                . '</p>',
+                );
+
+                ob_start();
+                comment_form(
+                        array(
+                                'title_reply'          => esc_html__( 'Leave a comment', RTEXTDOMAIN ),
+                                'title_reply_before'   => '<h3 class="comment-form-title">',
+                                'title_reply_after'    => '</h3>',
+                                'fields'               => $fields,
+                                'comment_field'        => '<p class="comment-form-comment">'
+                                        . '<label for="comment">' . esc_html__( 'Comment', RTEXTDOMAIN ) . '</label>'
+                                        . '<textarea id="comment" name="comment" class="system-textarea" cols="45" rows="8" required aria-required="true"></textarea>'
+                                        . '</p>',
+                                'comment_notes_before' => '',
+                                'comment_notes_after'  => '',
+                                'logged_in_as'         => '',
+                                'submit_button'        => '<button name="%1$s" type="submit" id="%2$s" class="%3$s">%4$s</button>',
+                                'submit_field'         => '<p class="form-submit"><span class="button-outer">%1$s</span> %2$s</p>',
+                                'class_submit'         => 'system-button',
+                        ),
+                        $post_id
+                );
+                $form = ob_get_clean();
+
+                $menu = array(
+                        'close' => array(
+                                'title'   => __( 'Close', RTEXTDOMAIN ),
+                                'onclick' => 'redmond_close_this(this)',
+                        ),
+                );
+
+                $data = array(
+                        'html'       => '<div class="redmond-comment-dialog-content">' . $form . '</div>',
+                        'title'      => sprintf( __( 'Leave a Comment on %s', RTEXTDOMAIN ), $safe_title ),
+                        'menu'       => $menu,
+                        'icon'       => redmond_get_post_icon( $post_id ),
+                        'resizable'  => false,
+                        'draggable'  => true,
+                );
+
+                wp_send_json_success( $data );
+        }
+
+        function redmond_share_post_callback() {
+                check_ajax_referer( 'redmond_ajax_nonce', 'nonce' );
+
+                if ( empty( $_POST['postId'] ) ) {
+                        wp_send_json_error( array( 'message' => __( 'Invalid post request.', RTEXTDOMAIN ) ), 400 );
+                }
+
+                $post_id = absint( wp_unslash( $_POST['postId'] ) );
+                if ( ! $post_id ) {
+                        wp_send_json_error( array( 'message' => __( 'Invalid post request.', RTEXTDOMAIN ) ), 400 );
+                }
+
+                $post = get_post( $post_id );
+                if ( empty( $post ) || 'publish' !== get_post_status( $post ) ) {
+                        wp_send_json_error( array( 'message' => __( 'The requested post could not be found.', RTEXTDOMAIN ) ), 404 );
+                }
+
+                $permalink     = get_permalink( $post_id );
+                $post_title    = wp_strip_all_tags( get_the_title( $post_id ) );
+                $charset       = get_bloginfo( 'charset' ) ?: 'UTF-8';
+                $encoded_title = rawurlencode( html_entity_decode( $post_title, ENT_QUOTES, $charset ) );
+                $encoded_url   = rawurlencode( $permalink );
+
+                $share_links = array(
+                        'facebook' => array(
+                                'label' => __( 'Facebook', RTEXTDOMAIN ),
+                                'url'   => 'https://www.facebook.com/sharer/sharer.php?u=' . $encoded_url,
+                        ),
+                        'twitter'  => array(
+                                'label' => __( 'Twitter / X', RTEXTDOMAIN ),
+                                'url'   => 'https://twitter.com/intent/tweet?url=' . $encoded_url . '&text=' . $encoded_title,
+                        ),
+                        'linkedin' => array(
+                                'label' => __( 'LinkedIn', RTEXTDOMAIN ),
+                                'url'   => 'https://www.linkedin.com/shareArticle?mini=true&url=' . $encoded_url . '&title=' . $encoded_title,
+                        ),
+                        'reddit'   => array(
+                                'label' => __( 'Reddit', RTEXTDOMAIN ),
+                                'url'   => 'https://www.reddit.com/submit?url=' . $encoded_url . '&title=' . $encoded_title,
+                        ),
+                        'email'    => array(
+                                'label' => __( 'Email', RTEXTDOMAIN ),
+                                'url'   => 'mailto:?subject=' . rawurlencode( sprintf( __( 'Check out "%s"', RTEXTDOMAIN ), $post_title ) ) . '&body=' . rawurlencode( sprintf( __( 'I thought you might enjoy this post: %s', RTEXTDOMAIN ), $permalink ) ),
+                        ),
+                );
+
+                $input_id = 'redmond-share-link-' . $post_id;
+
+                $html  = '<div class="redmond-share-dialog">';
+                $html .= '<p>' . esc_html__( 'Share this post using the options below.', RTEXTDOMAIN ) . '</p>';
+                $html .= '<ul class="redmond-share-list">';
+                foreach ( $share_links as $network => $link ) {
+                        $html .= '<li class="redmond-share-item redmond-share-' . esc_attr( $network ) . '">';
+                        $html .= '<a class="redmond-share-link" href="' . esc_url( $link['url'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $link['label'] ) . '</a>';
+                        $html .= '</li>';
+                }
+                $html .= '</ul>';
+                $html .= '<div class="redmond-share-copy">';
+                $html .= '<label for="' . esc_attr( $input_id ) . '">' . esc_html__( 'Direct link', RTEXTDOMAIN ) . '</label>';
+                $html .= '<div class="redmond-share-copy-controls">';
+                $html .= '<input type="text" readonly class="system-field redmond-share-url" id="' . esc_attr( $input_id ) . '" value="' . esc_url( $permalink ) . '" />';
+                $html .= '<span class="button-outer"><button type="button" class="system-button redmond-copy-link" data-copy-target="' . esc_attr( $input_id ) . '" data-success-message="' . esc_attr__( 'Link copied to clipboard.', RTEXTDOMAIN ) . '" data-error-message="' . esc_attr__( 'Unable to copy the link. Please copy it manually.', RTEXTDOMAIN ) . '">' . esc_html__( 'Copy link', RTEXTDOMAIN ) . '</button></span>';
+                $html .= '</div>';
+                $html .= '<p class="redmond-share-feedback" role="status" aria-live="polite"></p>';
+                $html .= '</div>';
+                $html .= '</div>';
+
+                $menu = array(
+                        'close' => array(
+                                'title'   => __( 'Close', RTEXTDOMAIN ),
+                                'onclick' => 'redmond_close_this(this)',
+                        ),
+                );
+
+                $data = array(
+                        'html'      => $html,
+                        'title'     => sprintf( __( 'Share "%s"', RTEXTDOMAIN ), $post_title ),
+                        'menu'      => $menu,
+                        'icon'      => redmond_get_post_icon( $post_id ),
+                        'resizable' => false,
+                        'draggable' => true,
+                );
+
+                wp_send_json_success( $data );
+        }
 ?>

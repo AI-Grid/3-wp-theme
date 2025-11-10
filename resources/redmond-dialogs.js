@@ -232,7 +232,7 @@ function redmond_adjust_dialog_sizes() {
                 });
 
                 var contentStyles = {
-                        'overflow-y': 'scroll',
+                        'overflow-y': 'auto',
                         'overflow-x': 'auto',
                         'min-height': '',
                         'height': '',
