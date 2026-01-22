@@ -214,11 +214,14 @@ function redmond_adjust_dialog_sizes() {
                 var fileBar = contentArea.children('.file-bar').first();
                 var fileBarHeight = fileBar.length ? (fileBar.outerHeight(true) || 0) : 0;
                 var maxContentHeight = Math.max(availableHeight - titleBarHeight - fileBarHeight, 200);
+                var currentWidth = dialogWrapper.outerWidth() || 0;
+                var targetWidth = currentWidth > 0 ? Math.min(currentWidth, availableWidth) : availableWidth;
 
                 dialogWrapper.css({
                         'height': '',
                         'min-height': '',
                         'max-height': shouldCapHeight ? availableHeight : '',
+                        'width': targetWidth,
                         'max-width': availableWidth,
                         'overflow-y': 'visible',
                         'overflow-x': 'visible',
@@ -246,7 +249,9 @@ function redmond_adjust_dialog_sizes() {
                                         collision: 'fit'
                                 },
                                 height: 'auto',
-                                maxHeight: shouldCapHeight ? availableHeight : false
+                                maxHeight: shouldCapHeight ? availableHeight : false,
+                                maxWidth: availableWidth,
+                                width: targetWidth
                         };
 
                         contentArea.dialog('option', dialogOptions);
