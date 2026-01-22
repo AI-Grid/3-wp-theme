@@ -214,9 +214,10 @@ function redmond_adjust_dialog_sizes() {
                 var fileBar = contentArea.children('.file-bar').first();
                 var fileBarHeight = fileBar.length ? (fileBar.outerHeight(true) || 0) : 0;
                 var maxContentHeight = Math.max(availableHeight - titleBarHeight - fileBarHeight, 200);
+                dialogWrapper.css('width', 'auto');
                 var currentWidth = dialogWrapper.outerWidth() || 0;
                 var shouldClampWidth = currentWidth > availableWidth;
-                var targetWidth = shouldClampWidth ? availableWidth : '';
+                var targetWidth = shouldClampWidth ? availableWidth : 'auto';
 
                 dialogWrapper.css({
                         'height': '',
