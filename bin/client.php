@@ -126,6 +126,7 @@
         function redmond_add_menus() {
                 $menus = array(
                         'quick_launch' => __( 'Quick Launch Menu', RTEXTDOMAIN ),
+                        'taskbar' => __( 'Taskbar Menu', RTEXTDOMAIN ),
                         'desktop' => __( 'Desktop Menu', RTEXTDOMAIN ),
                         'start' => __( 'Start Menu', RTEXTDOMAIN ),
                 );
