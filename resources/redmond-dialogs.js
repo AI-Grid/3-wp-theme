@@ -194,6 +194,7 @@ function redmond_style_close_button( closeButton ) {
 function redmond_adjust_dialog_sizes() {
         var workspace = jQuery('#desktop-window-area');
         var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
+        var viewportWidth = workspace.length ? workspace.innerWidth() : jQuery(window).width();
         if ( ! viewportHeight || viewportHeight <= 0 ) {
                 return;
         }
@@ -201,6 +202,7 @@ function redmond_adjust_dialog_sizes() {
         var desiredHeight = Math.max(viewportHeight - 120, 240);
         var maxViewportHeight = Math.max(viewportHeight - 40, 200);
         var availableHeight = Math.min(desiredHeight, maxViewportHeight);
+        var availableWidth = Math.max((viewportWidth || 0) - 40, 260);
         var positionTarget = workspace.length ? workspace : jQuery(window);
 
         jQuery('div.redmond-dialog-window').each(function() {
@@ -217,6 +219,7 @@ function redmond_adjust_dialog_sizes() {
                         'height': '',
                         'min-height': '',
                         'max-height': shouldCapHeight ? availableHeight : '',
+                        'max-width': availableWidth,
                         'overflow-y': 'visible',
                         'overflow-x': 'visible',
                         'padding-bottom': ''
