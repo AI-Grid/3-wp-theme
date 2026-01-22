@@ -204,7 +204,7 @@ function redmond_adjust_dialog_sizes() {
         var availableHeight = Math.min(desiredHeight, maxViewportHeight);
         var availableWidth = Math.max((viewportWidth || 0) - 40, 260);
         var positionTarget = workspace.length ? workspace : jQuery(window);
-        var preferredWidth = viewportWidth >= 960 ? Math.min(availableWidth, 720) : null;
+        var preferredWidth = viewportWidth >= 960 ? availableWidth : null;
 
         jQuery('div.redmond-dialog-window').each(function() {
                 var dialogWrapper = jQuery(this);
