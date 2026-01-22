@@ -198,18 +198,30 @@ button.system-button>span {
 	right: 0;
 	bottom: 30px;
 	display: flex;
-	align-items: flex-start;
+	align-items: stretch;
 	gap: 20px;
 	padding: 20px;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 #desktop-icons {
-	width: 180px;
+	width: 200px;
 	min-width: 180px;
-	max-width: 25%;
+	max-width: 28%;
 	height: 100%;
 	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 10px;
+	box-sizing: border-box;
+	background: linear-gradient(180deg, rgba(20,20,26,0.85) 0%, rgba(10,10,14,0.95) 100%);
+	border: 1px solid var(--redmond-border-dark);
+	border-top-color: var(--redmond-border-highlight);
+	border-left-color: var(--redmond-border-highlight);
+	border-radius: 4px;
+	position: sticky;
+	top: 20px;
+	align-self: flex-start;
 }
 
 #desktop-window-area {
@@ -217,7 +229,7 @@ button.system-button>span {
 	flex: 1;
 	min-width: 0;
 	height: 100%;
-	overflow: visible;
+	overflow: hidden;
 }
 
 #start-menu-wrapper {
@@ -544,8 +556,10 @@ div.redmond-dialog-window.redmond-dialog-hidden {
 }
 
 div.redmond-dialog-window>.ui-dialog-content, div.redmond-dialog-window>.ui-dialog-titlebar {
-        min-width: 300px;
+        min-width: 240px;
         display: block;
+	max-width: 100%;
+	box-sizing: border-box;
 }
 
 div.redmond-dialog-window>.ui-dialog-content {
@@ -636,6 +650,31 @@ div.redmond-dialog-window>div.ui-dialog-content {
     max-height: calc(100vh - 80px) !important;
     overflow-y: auto !important;
     overflow-x: auto !important;
+}
+
+@media (max-width: 720px) {
+	#desktop-area {
+		flex-direction: column;
+		padding: 12px;
+	}
+
+	#desktop-icons {
+		width: 100%;
+		max-width: none;
+		min-width: 0;
+		height: auto;
+		max-height: 40%;
+	}
+
+	#desktop-window-area {
+		height: auto;
+		min-height: 0;
+	}
+
+	div.redmond-dialog-window>.ui-dialog-content,
+	div.redmond-dialog-window>.ui-dialog-titlebar {
+		min-width: 200px;
+	}
 }
 
 .ui-resizable-handle {

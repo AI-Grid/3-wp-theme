@@ -194,6 +194,7 @@ function redmond_style_close_button( closeButton ) {
 function redmond_adjust_dialog_sizes() {
         var workspace = jQuery('#desktop-window-area');
         var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
+        var viewportWidth = workspace.length ? workspace.innerWidth() : jQuery(window).width();
         if ( ! viewportHeight || viewportHeight <= 0 ) {
                 return;
         }
@@ -201,6 +202,7 @@ function redmond_adjust_dialog_sizes() {
         var desiredHeight = Math.max(viewportHeight - 120, 240);
         var maxViewportHeight = Math.max(viewportHeight - 40, 200);
         var availableHeight = Math.min(desiredHeight, maxViewportHeight);
+        var availableWidth = Math.max((viewportWidth || 0) - 40, 260);
         var positionTarget = workspace.length ? workspace : jQuery(window);
 
         jQuery('div.redmond-dialog-window').each(function() {
@@ -212,11 +214,17 @@ function redmond_adjust_dialog_sizes() {
                 var fileBar = contentArea.children('.file-bar').first();
                 var fileBarHeight = fileBar.length ? (fileBar.outerHeight(true) || 0) : 0;
                 var maxContentHeight = Math.max(availableHeight - titleBarHeight - fileBarHeight, 200);
+                dialogWrapper.css('width', 'auto');
+                var currentWidth = dialogWrapper.outerWidth() || 0;
+                var shouldClampWidth = currentWidth > availableWidth;
+                var targetWidth = shouldClampWidth ? availableWidth : 'auto';
 
                 dialogWrapper.css({
                         'height': '',
                         'min-height': '',
                         'max-height': shouldCapHeight ? availableHeight : '',
+                        'width': targetWidth,
+                        'max-width': availableWidth,
                         'overflow-y': 'visible',
                         'overflow-x': 'visible',
                         'padding-bottom': ''
@@ -243,7 +251,9 @@ function redmond_adjust_dialog_sizes() {
                                         collision: 'fit'
                                 },
                                 height: 'auto',
-                                maxHeight: shouldCapHeight ? availableHeight : false
+                                maxHeight: shouldCapHeight ? availableHeight : false,
+                                maxWidth: availableWidth,
+                                width: targetWidth || 'auto'
                         };
 
                         contentArea.dialog('option', dialogOptions);

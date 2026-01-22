@@ -1,7 +1,9 @@
 <?php
 defined( 'ABSPATH' ) || die( 'Sorry, but you cannot access this page directly.' );
 global $wpdb;
+$taskbar_menu      = redmond_get_menu_as_array( 'taskbar' );
 $quick_launch      = redmond_get_menu_as_array( 'quick_launch' );
+$taskbar_items     = ! empty( $taskbar_menu ) ? $taskbar_menu : $quick_launch;
 $start_menu_items  = redmond_get_menu_as_array( 'start' );
 $current_user      = wp_get_current_user();
 ?>
@@ -38,7 +40,7 @@ $current_user      = wp_get_current_user();
 				</div>
 				<ul id="quick-launch-links">
 				<?php
-				foreach ( $quick_launch as $quick ) {
+				foreach ( $taskbar_items as $quick ) {
 				?>
 					<li>
 						<a href="<?php print esc_url( $quick->url ); ?>" <?php if ( $quick->object !== 'custom' ) { ?> class="post-link" data-post-id="<?php print intval( $quick->object_id ); ?>" <?php } ?> title="<?php print esc_html( get_the_title( $quick->object_id ) ); ?>">
