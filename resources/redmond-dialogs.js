@@ -193,8 +193,19 @@ function redmond_style_close_button( closeButton ) {
 
 function redmond_adjust_dialog_sizes() {
         var workspace = jQuery('#desktop-window-area');
+        var desktopArea = jQuery('#desktop-area');
+        var desktopIcons = jQuery('#desktop-icons');
         var viewportHeight = workspace.length ? workspace.innerHeight() : jQuery(window).height();
-        var viewportWidth = workspace.length ? workspace.innerWidth() : jQuery(window).width();
+        var workspaceWidth = workspace.length && workspace.get(0)
+                ? workspace.get(0).getBoundingClientRect().width
+                : 0;
+        if ( ! workspaceWidth && desktopArea.length ) {
+                var desktopWidth = desktopArea.get(0).getBoundingClientRect().width || jQuery(window).width();
+                var iconsWidth = desktopIcons.length ? desktopIcons.outerWidth(true) : 0;
+                var gap = parseFloat(desktopArea.css('gap')) || 0;
+                workspaceWidth = desktopWidth - iconsWidth - gap;
+        }
+        var viewportWidth = workspaceWidth || jQuery(window).width();
         if ( ! viewportHeight || viewportHeight <= 0 ) {
                 return;
         }
