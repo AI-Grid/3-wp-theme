@@ -419,7 +419,7 @@ function open_archive_as_dialog( archive , taxonomy , targetId ) {
 	});
 }
 
-function open_redmond_authors_window( author ) {
+function open_redmond_authors_window( author, targetId ) {
 	if ( typeof( author ) == 'undefined' ) {
 		author = 'all';
 	}
